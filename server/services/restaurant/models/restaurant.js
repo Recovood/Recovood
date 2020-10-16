@@ -15,8 +15,24 @@ module.exports = (sequelize, DataTypes) => {
   };
   Restaurant.init({
     UserId: DataTypes.STRING,
-    name: DataTypes.STRING,
-    address: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      validate:{
+        notEmpty: {
+          args: true,
+          msg: "name required"
+        }
+      }
+    },
+    address: {
+      type: DataTypes.STRING,
+      validate:{
+        notEmpty: {
+          args: true,
+          msg: "address required"
+        }
+      }
+    },
     image_url: DataTypes.STRING
   }, {
     sequelize,
