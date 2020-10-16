@@ -56,14 +56,14 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           min: {
             args: [0],
-            msg: "Price must be greater than or equals to 0",
+            msg: "Stock must be greater than or equals to 0",
           },
           isInt: {
-            msg: "Price must be in numeric format!",
+            msg: "Stock must be in numeric format!",
           },
           notEmpty: {
             args: true,
-            msg: "Price must be filled!",
+            msg: "Stock must be filled!",
           },
         },
       },
