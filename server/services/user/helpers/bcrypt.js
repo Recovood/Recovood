@@ -8,6 +8,7 @@ const hashPassword = (plainPassword) => {
 
 const checkPassword = (plainPassword, hashedPassword) => {
   const checked = bcrypt.compareSync(plainPassword, hashedPassword);
+  return checked;
 }
 
 module.exports = { hashPassword, checkPassword };
