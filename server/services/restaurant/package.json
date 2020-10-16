@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit --runInBand --verbose --watchAll",
     "start": "node app.js",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "migration": "sequelize db:migrate"
   },
   "keywords": [],
   "author": "",

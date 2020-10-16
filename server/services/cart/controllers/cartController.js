@@ -1,4 +1,4 @@
-const { Cart, sequelize } = require("../models") 
+const { Cart, sequelize, Food } = require("../models") 
 
 class CartController {
   static async create (req, res, next){
@@ -7,7 +7,7 @@ class CartController {
       const UserId = 1 // for testing purpose delete before production
       const { FoodId, quantity, status } = req.body
 
-      let cartFromDb = await Cart.findOne({where: {UserId, FoodId}}) // Add include: Food | if Food model completed
+      let cartFromDb = await Cart.findOne({where: {UserId, FoodId}, include: [ Food ]}) // Add include: Food | if Food model completed
       
       if(cartFromDb){
         let totalQuantity = +quantity + +cartFromDb.quantity
@@ -25,7 +25,7 @@ class CartController {
       } else{
         
         const newCart = await Cart.create({UserId, FoodId, quantity, status})
-        return res.status(201).josn({cartFromDb, message: "Successfully adding item to cart"})
+        return res.status(201).json({cartFromDb, message: "Successfully adding item to cart"})
       }
       
     } catch (error) {
