@@ -1,0 +1,24 @@
+{
+  "name": "food",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest --detectOpenHandles --forceExit --runInBand --verbose --watchAll",
+    "start": "node app.js",
+    "dev": "nodemon ./bin/www"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "pg": "^8.4.1",
+    "sequelize": "^6.3.5"
+  },
+  "devDependencies": {
+    "jest": "^26.5.3",
+    "supertest": "^5.0.0"
+  }
+}
