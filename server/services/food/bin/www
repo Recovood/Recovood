@@ -7,5 +7,5 @@ app.set("port", port);
 const server = http.createServer(app);
 
 server.listen(port, () => {
-  console.log(`User Server listening at http://localhost:${port}`);
+  console.log(`Food Server listening at http://localhost:${port}`);
 });
