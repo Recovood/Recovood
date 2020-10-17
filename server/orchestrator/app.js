@@ -19,13 +19,14 @@ const server = new ApolloServer({
     try {
       const access_token = req.headers.access_token || '';
 
-      let user = await axios({
+      let { data } = await axios({
         method: "POST",
         url: `http://localhost:4010/authentication`,
         headers: {
           access_token
         }
       })
+      let user = data
       return { user };
 
     } catch (error) {
