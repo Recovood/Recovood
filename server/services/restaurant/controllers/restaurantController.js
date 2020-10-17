@@ -3,13 +3,14 @@ const { Restaurant } = require("../models")
 class RestaurantController {
   static async create(req, res, next){
     try{
-      // const UserId = req.userData.id
-      const UserId = 1 // for testing purposes
+      let UserId  = +req.headers.user_id
+      // console.log(UserId);
+      // const UserId = 1 // for testing purposes
       const { name, address, image_url } = req.body
-  
-      const restaurant = await Restaurant.create({UserId, name, address, image_url})
+      console.log(UserId);
+      const restaurant = await Restaurant.create({UserId: UserId, name, address, image_url})
 
-      res.status(201).json({id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
+      res.status(201).json({UserId: restaurant.UserId, id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
     }catch(error){
       next(error)
     }
@@ -40,7 +41,7 @@ class RestaurantController {
         }
         next(error)
       } else {
-        res.status(200).json({id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
+        res.status(200).json({UserId: restaurant.UserId, id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
       }
     } catch (error) {
       next(error)
@@ -53,7 +54,7 @@ class RestaurantController {
       
       const data = await Restaurant.update({name, address, image_url}, {where: {id}, returning: true})
       const restaurant = data[1][0].dataValues
-      res.status(200).json({id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
+      res.status(200).json({UserId: restaurant.UserId, id: restaurant.id, name: restaurant.name, address: restaurant.address, image_url: restaurant.image_url})
     } catch (error) {
       next(error)
     }
@@ -64,6 +65,8 @@ class RestaurantController {
       const { id } = req.params //restaurant id
 
       const restaurant = await Restaurant.destroy({where: {id}, returning: true})
+
+      return res.status(200).json({message: 'Restaurant successfully deleted'})
 
     res.status(200).json({restaurant})
     } catch (error) {

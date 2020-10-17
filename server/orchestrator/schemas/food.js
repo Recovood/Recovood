@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
-const Redis = require("ioredis");
-const redis = new Redis();
+// const Redis = require("ioredis");
+// const redis = new Redis();
 const url = "http://localhost:3030/foods";
 
 const typeDefs = gql`

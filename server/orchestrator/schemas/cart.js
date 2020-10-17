@@ -11,7 +11,7 @@ const typeDefs = gql`
     status: String
   }  
 
-  type Message{
+  type MessageCart{
     message: String
   }
 
@@ -22,7 +22,7 @@ const typeDefs = gql`
   extend type Mutation {
     addCart(newCart: cartInput): Cart,
     updateCartQuantity(id: ID, newCart: cartInput): Cart,
-    deleteCart(id: ID): Message
+    deleteCart(id: ID): MessageCart
   }
 
   input cartInput{

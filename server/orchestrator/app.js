@@ -1,11 +1,11 @@
-
 const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
 const foodSchema = require("./schemas/food");
-// const axios = require("axios");
+const axios = require("axios");
 
 const userScheme = require("./schemas/user.js");
 
-const cart = require("./schemas/cart")
+const cartScheme = require("./schemas/cart")
+const restaurantScheme = require("./schemas/restaurant")
 
 const typeDefs = gql`
   type Query
@@ -13,7 +13,7 @@ const typeDefs = gql`
 `;
 
 
-const schema = makeExecutableSchema({ typeDefs: [typeDefs, cart.typeDefs, userScheme.typeDefs, foodSchema.typeDefs], resolvers: [cart.resolvers, userScheme.resolvers, foodSchema.resolvers] });
+const schema = makeExecutableSchema({ typeDefs: [typeDefs, cartScheme.typeDefs, restaurantScheme.typeDefs, userScheme.typeDefs, foodSchema.typeDefs], resolvers: [cartScheme.resolvers, restaurantScheme.resolvers, userScheme.resolvers, foodSchema.resolvers] });
 
 
 // using apollo-server 2.x
@@ -23,7 +23,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     try {
       const access_token = req.headers.access_token || '';
-
+      
       let { data } = await axios({
         method: "POST",
         url: `http://localhost:4010/authentication`,
@@ -31,6 +31,7 @@ const server = new ApolloServer({
           access_token
         }
       })
+      
       let user = data
       return { user };
 
