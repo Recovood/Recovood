@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { generateToken } = require("../helpers/jwt");
+const { generateToken, verifyToken } = require("../helpers/jwt");
 const { checkPassword } = require("../helpers/bcrypt");
 
 class UserController {
@@ -9,6 +9,28 @@ class UserController {
       return res.status(200).send("Recovood Server");
     } catch (err) {
       console.log(err, "<<<< error in showHome UserController");
+      return next(err);
+    }
+  }
+
+  static async userAuthentication(req, res, next) {
+    const { access_token } = req.headers;
+    try {
+      const userData = verifyToken(access_token);
+      console.log(userData, "<<<< this is userData");
+      
+      const user = await User.findOne({
+        where: {
+          email: userData.email
+        }
+      });
+      if (user) {
+        return res.status(200).json(userData);
+      } else {
+        throw { message: "User is not authenticatd", statusCode: 401 };
+      }
+    } catch(err) {
+      console.log(err, "<<<< error in userAuthentication");
       return next(err);
     }
   }
