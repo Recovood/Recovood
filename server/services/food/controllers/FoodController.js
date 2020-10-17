@@ -9,7 +9,7 @@ class FoodController {
         price,
         stock,
         ingredient,
-        RestaurantId,
+        RestaurantId, // for testing (delete before production)
       } = req.body;
       const food = await Food.create({
         name,
