@@ -1,0 +1,104 @@
+# USER
+
+query getMessage {
+  getMessage {
+    message
+  }
+}
+
+mutation register {
+  register(user: {
+    username:"Jokowi",
+    email: "jokowi88@mail.com",
+    password: "jokowidodo",
+    role: "petani"
+  }){
+    username
+    email
+    access_token
+    role
+  }
+}
+
+mutation login {
+  login(user: {
+    email: "jokowi4@mail.com",
+    password: "jokowidodo"
+  }){
+    username
+    email
+    access_token
+    role
+  }
+}
+
+# FOOD
+
+query getFoods {
+  getFoods {
+    id
+    name
+    image_url
+    price
+    stock
+    ingredient
+    RestaurantId
+  }
+}
+
+query getFood {
+  getFood(id: 2) {
+    id
+    name
+    image_url
+    price
+    stock
+    ingredient
+    RestaurantId
+  }
+}
+
+mutation addFood {
+  addFood(
+    name: "Fried Chicken"
+    image_url: "https://static.toiimg.com/thumb/61589069.cms?width=1200&height=900"
+    price: 10000
+    stock: 4
+    ingredient: "ayam dikasi tepung"
+    RestaurantId: 3
+  ) {
+    id
+    name
+    image_url
+    price
+    stock
+    ingredient
+    RestaurantId
+  }
+}
+
+mutation updateFood {
+  updateFood(
+    id: 7
+  	name: "Ayam goreng"
+    image_url: "https://static.toiimg.com/thumb/61589069.cms?width=1200&height=900"
+    price: 10000
+    stock: 4
+    ingredient: "ayam dikasi tepung"
+    RestaurantId: 3
+  ) {
+    id
+    name
+    image_url
+    price
+    stock
+    ingredient
+    RestaurantId
+  }
+}
+
+mutation deleteFood {
+  deleteFood(id: 7) {
+    name
+  }
+}

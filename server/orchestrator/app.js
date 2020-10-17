@@ -1,15 +1,20 @@
-require("dotenv").config();
+
 const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
-const axios = require("axios");
+const foodSchema = require("./schemas/food");
+// const axios = require("axios");
+
+const userScheme = require("./schemas/user.js");
 
 const cart = require("./schemas/cart")
 
 const typeDefs = gql`
- type Query
- type Mutation
-`
+  type Query
+  type Mutation
+`;
 
-const schema = makeExecutableSchema({ typeDefs: [typeDefs, cart.typeDefs], resolvers: [cart.resolvers] })
+
+const schema = makeExecutableSchema({ typeDefs: [typeDefs, cart.typeDefs, userScheme.typeDefs, foodSchema.typeDefs], resolvers: [cart.resolvers, userScheme.resolvers, foodSchema.resolvers] });
+
 
 // using apollo-server 2.x
 
@@ -32,6 +37,7 @@ const server = new ApolloServer({
     } catch (error) {
       // console.log(error);
     }
+
 
   },
 });
