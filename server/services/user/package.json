@@ -8,7 +8,9 @@
     "start": "node app.js",
     "dev": "nodemon ./bin/www",
     "migration": "sequelize db:create && sequelize db:migrate",
-    "database-drop": "sequelize db:drop"
+    "database-drop": "sequelize db:drop",
+    "migration-test": "sequelize db:create --env test && sequelize db:migrate --env test",
+    "database-drop-test": "sequelize db:drop --env test"
   },
   "keywords": [],
   "author": "",
