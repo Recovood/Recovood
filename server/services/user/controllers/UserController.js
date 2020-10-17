@@ -39,7 +39,6 @@ class UserController {
   static async register(req, res, next) {
     try {
       const { username, email, password, role } = req.body;
-      console.log(req.body, "<<<< ini req.body");
       const user = await User.create({
         username,
         email,

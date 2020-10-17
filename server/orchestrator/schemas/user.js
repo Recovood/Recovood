@@ -74,7 +74,6 @@ const resolvers = {
           method: "POST",
           data: user
         });
-        console.log(data, "<<<< this is data");
         return data;
       } catch(err) {
         console.log(err, "<<<< error in login");
