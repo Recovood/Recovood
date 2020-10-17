@@ -48,14 +48,7 @@ class FoodController {
 
   static async updateFood(req, res, next) {
     try {
-      const {
-        name,
-        image_url,
-        price,
-        stock,
-        ingredient,
-        RestaurantId,
-      } = req.body;
+      const { name, image_url, price, stock, ingredient } = req.body;
       const food = await Food.update(
         {
           name,
@@ -63,7 +56,6 @@ class FoodController {
           price,
           stock,
           ingredient,
-          RestaurantId,
         },
         {
           where: {
