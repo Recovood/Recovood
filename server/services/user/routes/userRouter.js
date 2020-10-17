@@ -10,4 +10,6 @@ userRouter.post("/login", UserController.login);
 
 userRouter.post("/googleLogin", UserController.googleLogin);
 
+userRouter.post("/userAuthentication", UserController.userAuthentication);
+
 module.exports = userRouter;
