@@ -68,7 +68,8 @@ const resolvers = {
   Mutation: {
     async addFood(_, args, context) {
       try {
-        const { data } = await axios.post(url);
+        const { data } = await axios.post(url, args);
+        console.log(data);
         return data;
       } catch (err) {
         console.log(err, "<<< error from addFood");
