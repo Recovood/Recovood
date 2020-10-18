@@ -7,22 +7,32 @@ import { StyleSheet, Text, View } from "react-native";
 // import { Provider } from "react-redux";
 // import store from "./store/index";
 import { Cart, Login, FoodList, FoodDetails } from "./screens/index";
+import { ApolloProvider } from "@apollo/client";
+import client from "./configs/apollo";
+import PaymentPage from "./screens/PaymentPage";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     // <Provider>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Cart" component={Cart} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="FoodList" component={FoodList} />
-        <Stack.Screen name="FoodDetails" component={FoodDetails} />
-        <PopupDetail/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Cart" component={Cart} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="FoodList" component={FoodList} />
+          <Stack.Screen name="FoodDetails" component={FoodDetails} />
+          <Stack.Screen name="Payment" component={PaymentPage}/>
+          {/* <PopupDetail/> */}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
+
     // </Provider>
+    // <View>
+      // <Cart/>
+    // </View>
   );
 }
 
