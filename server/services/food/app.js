@@ -17,8 +17,8 @@ app.use(foodRouter);
 
 app.use(errHandler);
 
-// app.listen(port, () => {
-//   console.log(`User Server listening at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`User Server listening at http://localhost:${port}`);
+});
 
 module.exports = app;
