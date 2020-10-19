@@ -1,4 +1,4 @@
-const { Cart, sequelize, Food } = require("../models")
+const { Cart, sequelize, Food, Restaurant } = require("../models")
 const midtransClient = require('midtrans-client');
 
 class CartController {
@@ -50,7 +50,7 @@ class CartController {
     try {
       let UserId = req.headers.user_id
       console.log(req.headers);
-      let carts = await Cart.findAll({ where: { UserId }, include: [Food] }) // Add include: Food | if Food model completed
+      let carts = await Cart.findAll({ where: { UserId }, include: [{model: Food, include: [Restaurant]}] }) // Add include: Food | if Food model completed
 
       return res.status(200).json({ carts })
     } catch (error) {
@@ -149,22 +149,50 @@ class CartController {
         isProduction: false,
         serverKey: 'SB-Mid-server-1zuSI64YfBbKXCqz5_MzKCXV'
       });
-  
+      
       let parameter = {
-        "transaction_details": {
-          "order_id": "YOUR-ORDERID-123456",
-          "gross_amount": 10000
-        },
-        "credit_card": {
-          "secure": true
-        },
-        "customer_details": {
-          "first_name": "budi",
-          "last_name": "pratama",
-          "email": "budi.pra@example.com",
-          "phone": "08111222333"
-        }
+
       };
+
+      switch (req.body.paymentType) {
+        case "bank_transfer":     //BCA BNI BRI
+          parameter= {
+            "payment_type": req.body.paymentType,
+            "bank_transfer": {
+              "bank": req.body.bankName
+            },
+            "transaction_details": {
+              "order_id": req.body.orderId,
+              "gross_amount": req.body.totalPrice
+            },
+            "customer_details": {
+              "first_name": req.body.name,
+              "last_name": "",
+              "email": req.body.email,
+            }
+          }
+          break;
+        case "credit_card":
+          parameter= {
+            "payment_type": req.body.paymentType,
+            "transaction_details": {
+              "order_id": "YOUR-ORDERID-123456",
+              "gross_amount": 10000
+            },
+            "credit_card": {
+              "secure": true
+            },
+            "customer_details": {
+              "first_name": "budi",
+              "last_name": "pratama",
+              "email": "budi.pra@example.com",
+              "phone": "08111222333"
+            }
+          }
+        default:
+          break;
+      }
+
   
       snap.createTransaction(parameter)
         .then((transaction) => {
@@ -181,6 +209,7 @@ class CartController {
       next(error)
     }
   }
+
 }
 
 module.exports = CartController

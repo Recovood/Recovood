@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
   ActivityIndicator
 } from "react-native";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import PayModal from "../components/PayModal"
+import { Dropdown } from 'react-native-material-dropdown-v2';
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -32,67 +34,66 @@ const GET_ALL_CARTS = gql`
         stock
         ingredient
         RestaurantId
+        Restaurant{
+          id,
+          UserId,
+          name,
+          address,
+          image_url
+        }
       }
     }
   }
 `
 
-const PAYMENT = gql`
-  mutation payment{
-    payment{
-      token
-      redirect_url
-    }
-  }
-`;
+
 
 
 function Cart(props) {
 
-  // const [isPress, setIsPress] = useState(false);
+  const [isPress, setIsPress] = useState(false);
+  const [cartStatus, setCartStatus] = useState("Waiting for Checkout")
+  const [totalPrice, setTotalPrice] = useState(0)
   const { data, loading, error } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpNEBtYWlsLmNvbSIsImlkIjoxMCwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAzMTA4MDQxfQ.JNpTWIHKLkdg99N-DzbCOYefBaONtXSkLBDjuqWbcvM"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
       }
     }
   }
   )
-  console.log(data)
-  console.log(error, "<<< ini error");
 
-  const [pay, { loading: LoadingPayment }] = useMutation(PAYMENT, {
-    context: {
-      headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpNEBtYWlsLmNvbSIsImlkIjoxMCwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAzMTA4MDQxfQ.JNpTWIHKLkdg99N-DzbCOYefBaONtXSkLBDjuqWbcvM"
-      }
-    }
-  });
 
-  if (LoadingPayment) {
-    return (
-      <ActivityIndicator
-        style={{ flex: 1 }} 
-        size="large"
-        color="#0000ff"
-      />
-    )
-  }
-
-  function payButtonHandler() {
-    console.log("test");
-    pay() //insert detail to send to backend
-      .then((res) => {
-        console.log(res.data, "<< paybuttonhandler");
-        let payResponse = res.data.payment
-
-        props.navigation.navigate("Payment", { payResponse })
-
+  useEffect(() => {
+    if (loading === true && data) {
+      let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
+      countedCarts.forEach(cart => {
+        console.log(cart.Food.price, cart.quantity, "<<< price")
+        setTotalPrice(totalPrice + (cart.Food.price * cart.quantity))
+        console.log(totalPrice);
       })
+    }
+  }, [loading])
+
+  let cartStatusOption = [
+    { value: "Waiting for Checkout" },
+    { value: "Pending" },
+    { value: "Paid" },
+    { value: "Done" }
+  ]
+
+  function payButtonHandler(){
+    setIsPress(true)
   }
+
+
+  function changeLabelHandler(text) {
+    setCartStatus(text)
+    console.log(cartStatus);
+  }
+
 
   const renderItem = ({ item }) => {
-    console.log(item, "init item <<<<")
     return (
       <View>
         <Image
@@ -130,7 +131,7 @@ function Cart(props) {
               source={require("../assets/location.png")}
             />
             <View style={{ maxWidth: "70%" }}>
-              <Text>{/*need fixing */} ADDRESS DISINI GANTI NANTI</Text>
+              <Text>{item.Food.Restaurant.address}</Text>
             </View>
           </View>
           <Text
@@ -148,40 +149,54 @@ function Cart(props) {
     )
   }
 
+
+
   if (loading || data === undefined) {
     return (
-      <View>
-        <Text>Loading</Text>
-      </View>
+      <ActivityIndicator
+        style={{ flex: 1 }}
+        size="large"
+        color="#376444"
+      />
     )
   }
 
   return (
     <View style={{ justifyContent: "space-between", flexDirection: "column", flex: 1, paddingTop: 60, paddingHorizontal: 25 }}>
-      <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
+      {/* <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
         Order Summary
-      </Text>
+      </Text> */}
+      <Dropdown
+        label='Shopping Cart'
+        data={cartStatusOption}
+        onChangeText={(text) => changeLabelHandler(text)}
+        itemCount={3}
+        dropdownPosition={-4}
+        value={"Waiting for Checkout"}
+      />
       {/* <ScrollView style={{ flex: 10 }}> */}
-        <FlatList
-          style={{ flex: 2, flexDirection: "column" }}
-          data={data.getAllCarts}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
+      <FlatList
+        style={{ flex: 2, flexDirection: "column" }}
+        data={data.getAllCarts.filter(cart => cart.status === cartStatus)}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListFooterComponent={
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 25,
+              // color: "#404040",
+              color: "black",
+              marginVertical: 10,
+              flex: 1
+            }}
+          >
+            Total {totalPrice}
+          </Text>
+        }
+      />
       {/* </ScrollView> */}
       <View style={{ width: "100%", alignItems: "center", }}>
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 25,
-            // color: "#404040",
-            color: "black",
-            marginVertical: 10,
-            flex: 1
-          }}
-        >
-          Payment Method
-        </Text>
         <TouchableOpacity
           style={{
             width: "80%",
@@ -198,6 +213,11 @@ function Cart(props) {
             Pay Now
           </Text>
         </TouchableOpacity>
+        <PayModal
+          isPress={isPress}
+          setIsPress={() => setIsPress(false)}
+          checkoutCarts={data.getAllCarts.filter(cart => cart.status === cartStatus)}
+        />
       </View>
     </View >
   );

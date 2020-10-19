@@ -12,10 +12,16 @@ const typeDefs = gql`
     Food: Food
   }
 
-
-  type midtransResponse{
-    token: String
-    redirect_url: String
+  type paymentBankResponse{
+    statusMessage: String,
+    transactionId: String,
+    orderId: String,
+    totalPrice: String,
+    paymentType: String,
+    transactionTime: String,
+    transactionStatus: String,
+    vaNumber: String,
+    bank: String
   }
 
   type MessageCart{
@@ -30,7 +36,14 @@ const typeDefs = gql`
     addCart(newCart: cartInput): Cart,
     updateCartQuantity(id: ID, newCart: cartInput): Cart,
     deleteCart(id: ID): MessageCart
-    payment: midtransResponse
+    paymentBank(paymentInfo: paymentBankInput): paymentBankResponse
+  }
+
+  input paymentBankInput{
+    paymentType: String,
+    bankName: String,
+    orderId: String,
+    totalPrice: String,
   }
 
   input cartInput{
@@ -86,7 +99,8 @@ const resolvers = {
           quantity,
           status
         }= args.newCart
-  
+        
+        console.log(status, "sebelum");
         let {data} = await Axios({
           method: "POST",
           url: `${urlCart}/carts`,
@@ -178,34 +192,45 @@ const resolvers = {
       }
     },
 
-    payment: async (_, args, context) => {
-      try {
-        if (context.user === undefined){
-          throw("auth error")
-        }
-        // let UserId = context.user.id
-        // let id = args.id
-        // let {
-        // }= args.newCart
+    // payment: async (_, args, context) => {
+    //   try {
+    //     if (context.user === undefined){
+    //       throw("auth error")
+    //     }
+    //     // let UserId = context.user.id
+    //     // let id = args.id
+    //     // let {
+    //     // }= args.newCart
   
-        let {data} = await Axios({
-          method: "POST",
-          url: `${urlCart}/midtrans`,
-          //not ready for production | add customer details by sending data to this endpoint
-        })
+    //     let {data} = await Axios({
+    //       method: "POST",
+    //       url: `${urlCart}/midtrans`,
+    //       //not ready for production | add customer details by sending data to this endpoint
+    //     })
         
-        console.log(data, "<<<<<cartresolver");
-        return data.midtransResponse
-      } catch (error) {
-        if (error === "auth error"){
-          throw new AuthenticationError("must be authenticated")
-        } else if (error.statusCode === 400) {
-          console.log(error);
-          throw new UserInputError(error.response.data.errors[0], error.statusCode)
-        } else{
-          return error
-        }
-      }
+    //     console.log(data, "<<<<<cartresolver");
+    //     return data.midtransResponse
+    //   } catch (error) {
+    //     if (error === "auth error"){
+    //       throw new AuthenticationError("must be authenticated")
+    //     } else if (error.statusCode === 400) {
+    //       console.log(error);
+    //       throw new UserInputError(error.response.data.errors[0], error.statusCode)
+    //     } else{
+    //       return error
+    //     }
+    //   }
+    // },
+
+    paymentBank: async (_, args, context) => {
+      const {     
+        paymentType,
+        bankName,
+        orderId,
+        totalPrice
+      } = args.paymentInfo
+      const {username, email} = context.user
+      console.log(args.paymentInfo, username, email)
     }
   }
 }
