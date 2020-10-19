@@ -1,4 +1,5 @@
-import React from "react";
+import { gql, useMutation } from "@apollo/client";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -7,8 +8,45 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import { WebView } from "react-native-webview"
 
-export default function Cart() {
+
+const PAYMENT = gql`
+  mutation payment{
+    payment{
+      token
+      redirect_url
+    }
+  }
+`
+
+export default function Cart({ navigation }) {
+  const [pay] = useMutation(PAYMENT, {
+    context: {
+      headers: {
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+      }
+    }
+
+  })
+
+  // useEffect(()=> {
+  //   if (!loading){
+  //     navigation.navigate("Payment", {data})
+  //   }
+  // }, [loading])
+  // console.log(data);
+  function payButtonHandler() {
+    pay() //insert detail to send to backend
+      .then((res) => {
+        console.log(res);
+        let payResponse = res.data.payment
+
+        navigation.navigate("Payment", { payResponse })
+
+      })
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.cardsWrapper}>
@@ -41,7 +79,7 @@ export default function Cart() {
                 Amazing description for this amazing place
               </Text>
               <View style={styles.cardPrice}>
-                <Text style={{ fontSize: "20em" }}>Rp.25.000</Text>
+                <Text style={{ fontSize: 20 }}>Rp.25.000</Text>
                 <Button style={styles.buttonEdit} title="Edit" />
               </View>
             </View>
@@ -93,7 +131,7 @@ export default function Cart() {
         </View>
       </View>
       <View style={styles.bottom}>
-        <Button style={styles.buttonPay} title="Pay Now" />
+        <Button style={styles.buttonPay} title="Pay No" onPress={payButtonHandler} />
       </View>
     </View>
   );
