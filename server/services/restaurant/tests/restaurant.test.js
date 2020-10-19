@@ -1,11 +1,13 @@
 const app = require("../app")
-const { sequelize } = require("../models")
+const { sequelize, User } = require("../models")
 const { queryInterface } = sequelize
 const request = require("supertest")
 
 let idOfRestaurant
 
-beforeAll((done) => {
+let user
+
+beforeAll( async(done) => {
   const restaurants = {
     name: "Ayam Bu Vesti",
     address: "Jl. Pangeran Antasari, No.11",
@@ -13,6 +15,13 @@ beforeAll((done) => {
     createdAt: new Date(),
     updatedAt: new Date()
   }
+
+  user = await User.create({
+    username: "admin",
+    email: "admin@mail.com",
+    password: "adminganteng",
+    role: "admin"
+  });
 
   queryInterface.bulkInsert("Restaurants", [restaurants], {})
     .then(() => {
@@ -37,11 +46,14 @@ beforeAll((done) => {
 afterAll(done => {
   queryInterface.bulkDelete("Restaurants", null, {})
     .then(() => done())
+  queryInterface.bulkDelete("Users", null, {})
+    .then(() => done())
 })
 
 describe("Model Restaurant", () => {
-  test("Successfully add product to database", (done) => {
-    request(app)
+  test("Successfully add product to database", async(done) => {
+    console.log(user, "<<<<<<<<<<<<<<<<<<<<<<< user");
+    await request(app)
       .post("/restaurants")
       .send({
         "name": "Ayam Bu Vesti",
@@ -49,6 +61,7 @@ describe("Model Restaurant", () => {
         "image_url": "www.image.com"
       })
       .set("Accept", "application/json")
+      .set("user_id", user.id)
       .expect("Content-Type", /json/)
       .then(res => {
         const { body, status } = res
@@ -59,6 +72,10 @@ describe("Model Restaurant", () => {
         expect(body).toHaveProperty("image_url", "www.image.com")
         done()
       })
+      .catch(err => {
+        console.log(err, "<<<<<<<<<<<<<<<<<<<< errornya");
+      })
+      // console.log(response, "<<<<<<<<<<<<<<<<<<<<<<< response");
   })
 
   test("Sucessfully read all restaurants", (done) => {
