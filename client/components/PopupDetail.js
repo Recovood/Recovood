@@ -1,15 +1,17 @@
 import { useState } from "react"
-import { Button, Text, View, StyleSheet, Dimensions, TextInput, TouchableHighlight, Pressable } from "react-native"
+import { Button, Text, View, StyleSheet, Dimensions, TextInput, TouchableHighlight, Pressable, Image, TouchableOpacity } from "react-native"
 import Modal from 'react-native-modal'
 import React from 'react'
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
-export default function PopupDetail() {
-  const [isPress, setIsPress] = useState(false)
+
+export default function PopupDetail({ isPress, setFalse= () => {}, address, price, navigation, item }) {
+  
+  const [ quantity, setQuantity ] = useState(1);
+
   return (
     <View style={styles.container}>
-      <Pressable style={styles.reserveButton}  onPress={() => { setIsPress(true) }}><Text style={styles.reserveText}>Reserve</Text></Pressable>
 
       <Modal
         isVisible={isPress}
@@ -17,28 +19,38 @@ export default function PopupDetail() {
         animationOut={"slideOutDown"}
         swipeThreshold={80}
         swipeDirection="down"
-        onSwipeComplete={() => { setIsPress(false) }}
-        onBackdropPress={() => { setIsPress(false) }}
+        onSwipeComplete={() => { setFalse() }}
+        onBackdropPress={() => { setFalse() }}
         style={styles.modal}
       >
         <View style={styles.insideModal}>
-          <Text style={styles.addressText}>Jl Pangeran Antasari No.11, Jakarta Selatan, Indonesia</Text>
+          <Text style={styles.addressText}>{address}</Text>
           <View style={styles.line}></View>
           <Text style={styles.quantityText}>Select Quantity</Text>
           <View style={styles.counterContainer}>
             <View style={styles.center}>
-              <Text> - </Text>
-              <TextInput style={styles.counter}> 1 </TextInput>
-              <Text> + </Text>
+            <TouchableOpacity onPress={() => quantity > 0 ? setQuantity(quantity - 1) : null}>
+                <Image 
+                  style={{ height: 20, width: 20 }}
+                  source={require("../assets/minus.png")}
+                />
+              </TouchableOpacity>
+              <TextInput style={styles.counter}> {quantity} </TextInput>
+              <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
+                <Image 
+                  style={{ height: 20, width: 20 }}
+                  source={require("../assets/plus.png")}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.line}></View>
           <View style={styles.total}>
             <Text>Total</Text>
-            <Text>Rp25.000</Text>
+            <Text>Rp{parseInt(price) * quantity}</Text>
           </View>
           <View style={styles.line}></View>
-          <Pressable style={styles.reserveButton} onPress={() => { setIsPress(false) }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
+          <Pressable style={styles.reserveButton} onPress={() => { setFalse(), navigation.navigate("Cart", item={item: item, totalPrice: parseInt(price) * quantity}) }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
 
         </View>
       </Modal>
@@ -102,7 +114,8 @@ const styles = StyleSheet.create({
   },
   addressText: {
     textAlign: "center",
-    paddingHorizontal: 50
+    paddingHorizontal: 50,
+
   },
   quantityText: {
     textAlign: "center"
@@ -112,7 +125,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   center: {
-    flexDirection: "row"
+    flexDirection: "row",
+    alignItems: "center"
   },
   counter: {
     textAlign: "center",

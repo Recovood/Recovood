@@ -1,185 +1,135 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  Button,
   StyleSheet,
-  Image,
   ScrollView,
+  FlatList,
+  Image,
+  Platform,
+  TouchableOpacity,
 } from "react-native";
-import PopupDetail from "../components/PopupDetail";
+import { gql, useMutation } from "@apollo/client";
 
-export default function Cart() {
+const PAYMENT = gql`
+  mutation payment {
+    payment {
+      token
+      redirect_url
+    }
+  }
+`;
+
+function Cart(props) {
+  const [isPress, setIsPress] = useState(false);
+
+  const [pay] = useMutation(PAYMENT, {
+    context: {
+      headers: {
+        access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ",
+      },
+    },
+  });
+
+  function payButtonHandler() {
+    pay() //insert detail to send to backend
+      .then((res) => {
+        console.log(res);
+        let payResponse = res.data.payment;
+
+        props.navigation.navigate("Payment", { payResponse });
+      });
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.cardsWrapper}>
-        <ScrollView>
-          <Text
-            style={{
-              alignSelf: "flex-start",
-              fontSize: 18,
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          >
-            Order Summary
+    <View style={{ paddingVertical: 60, paddingHorizontal: 25 }}>
+      <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
+        Order Summary
+      </Text>
+      <View style={{ marginVertical: 40, flexDirection: "row" }}>
+        <Image
+          style={{ height: 150, width: 150, borderRadius: 20 }}
+          source={{
+            uri: props.route.params.item.image_url,
+          }}
+        />
+        <View style={{ marginHorizontal: 15 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 25, color: "#404040" }}>
+            {props.route.params.item.name}
           </Text>
-          <View style={styles.card}>
-            <View style={styles.cardImgWrapper}>
-              <Image
-                source={{
-                  uri:
-                    "https://cdn0-production-images-kly.akamaized.net/VP_bhRn3rKvm5A7do_xW44QkFvU=/1593x0:4329x3649/375x500/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/2972859/original/085912400_1574242860-shutterstock_1148861465.jpg",
-                }}
-                resizeMode="cover"
-                style={styles.cardImg}
-              />
-            </View>
-            <View style={styles.cardInfo}>
-              <Text style={styles.cardTitle}>Amazing Food Place</Text>
-              {/* <StarRating ratings={4} reviews={99} /> */}
-              <Text style={styles.cardDetails}>
-                Amazing description for this amazing place
-              </Text>
-              <View style={styles.cardPrice}>
-                <Text style={{ fontSize: "20em" }}>Rp.25.000</Text>
-                <Button style={styles.buttonEdit} title="Edit" />
-              </View>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <View style={styles.cardImgWrapper}>
-              <Image
-                source={{
-                  uri:
-                    "https://cdn0-production-images-kly.akamaized.net/VP_bhRn3rKvm5A7do_xW44QkFvU=/1593x0:4329x3649/375x500/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/2972859/original/085912400_1574242860-shutterstock_1148861465.jpg",
-                }}
-                resizeMode="cover"
-                style={styles.cardImg}
-              />
-            </View>
-            <View style={styles.cardInfo}>
-              <Text style={styles.cardTitle}>Amazing Food Place</Text>
-              {/* <StarRating ratings={4} reviews={99} /> */}
-              <Text style={styles.cardDetails}>
-                Amazing description for this amazing place
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-        <View style={styles.paymentSummaryContainer}>
-          <View style={styles.endLabelContainer}>
-            <Text style={styles.priceLabel}>Subtotal</Text>
-            <Text style={styles.priceLabel}>Booking fee</Text>
-            <Text style={styles.priceLabel}>Total</Text>
-          </View>
-
-          <View>
-            <Text style={styles.price}>Rp.50.000</Text>
-            <Text style={styles.price}>Rp.5.000</Text>
-            <Text style={styles.price}>Rp.55.000</Text>
-          </View>
-        </View>
-        <View style={styles.paymentMethod}>
-          <Text
+          <View
             style={{
-              alignSelf: "flex-start",
-              fontSize: 18,
-              fontWeight: "bold",
-              color: "#333",
+              flexDirection: "row",
+              marginVertical: 10,
+              alignItems: "center",
             }}
           >
-            Payment Method
+            <Image
+              style={{ marginRight: 10 }}
+              source={require("../assets/time.png")}
+            />
+            <Text>Today, 19:00 - 22:00</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              marginVertical: 0,
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={{ marginRight: 10 }}
+              source={require("../assets/location.png")}
+            />
+            <View style={{ maxWidth: "70%" }}>
+              <Text>{props.route.params.item.Restaurant.address}</Text>
+            </View>
+          </View>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "#404040",
+              marginVertical: 10,
+            }}
+          >
+            Rp{props.route.params.totalPrice}
           </Text>
         </View>
       </View>
-      <View style={styles.bottom}>
-        <Button style={styles.buttonPay} title="Pay Now" />
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 25,
+          color: "#404040",
+          marginVertical: 10,
+        }}
+      >
+        Payment Method
+      </Text>
+      <View
+        style={{ width: "100%", alignItems: "center", marginVertical: 150 }}
+      >
+        <TouchableOpacity
+          style={{
+            width: "80%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#376444",
+            borderRadius: 100,
+            height: 40,
+          }}
+          onPress={payButtonHandler}
+        >
+          <Text style={{ color: "#fff", fontSize: 20, fontWeight: "bold" }}>
+            Pay Now
+          </Text>
+        </TouchableOpacity>
       </View>
       <PopupDetail />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  cardsWrapper: {
-    marginTop: 20,
-    width: "90%",
-    alignSelf: "center",
-  },
-  card: {
-    height: 100,
-    marginVertical: 10,
-    flexDirection: "row",
-    shadowColor: "#999",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  cardImgWrapper: {
-    flex: 1,
-  },
-  cardImg: {
-    height: "100%",
-    width: "100%",
-    alignSelf: "center",
-    borderRadius: 8,
-    borderBottomRightRadius: 0,
-    borderTopRightRadius: 0,
-  },
-  cardInfo: {
-    flex: 2,
-    padding: 10,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderBottomRightRadius: 8,
-    borderTopRightRadius: 8,
-    backgroundColor: "#fff",
-  },
-  cardTitle: {
-    fontWeight: "bold",
-  },
-  cardDetails: {
-    fontSize: 12,
-    color: "#444",
-  },
-  cardPrice: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  paymentMethod: {
-    marginTop: 100,
-    width: "90%",
-    alignSelf: "center",
-  },
-  buttonPay: {
-    position: "absolute",
-    flex: 1,
-  },
-  bottom: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 50,
-  },
-  paymentSummaryContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginRight: 20,
-  },
-  endLabelContainer: {
-    alignItems: "flex-end",
-    paddingRight: 20,
-  },
-  price: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  priceLabel: {
-    fontSize: 16,
-  },
-});
+export default Cart;
