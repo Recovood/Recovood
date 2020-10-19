@@ -1,4 +1,4 @@
-import PopupDetail from "./components/PopupDetail"
+import PopupDetail from "./components/PopupDetail";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,10 +19,13 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="FoodList" component={FoodList} />
         <Stack.Screen name="FoodDetails" component={FoodDetails} />
-        <PopupDetail/>
+        {/* <PopupDetail /> */}
       </Stack.Navigator>
     </NavigationContainer>
     // </Provider>
+    // <View>
+    //   <PopupDetail></PopupDetail>
+    // </View>
   );
 }
 

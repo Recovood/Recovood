@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import PopupDetail from "../components/PopupDetail";
 
 export default function Cart() {
   return (
@@ -95,6 +96,7 @@ export default function Cart() {
       <View style={styles.bottom}>
         <Button style={styles.buttonPay} title="Pay Now" />
       </View>
+      <PopupDetail />
     </View>
   );
 }
