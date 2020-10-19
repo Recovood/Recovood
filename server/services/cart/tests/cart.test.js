@@ -1,5 +1,16 @@
-const request = require("supertest")
-const app = require("../app.js")
+const request = require("supertest");
+const app = require("../app.js");
+
+let user;
+
+beforeAll(async (done) => {
+  user = await User.create({
+    username: "user",
+    email: "user@mail.com",
+    password: "userganteng",
+    role: "customer",
+  });
+});
 
 describe("MODEL Cart", () => {
   // test("Hello Cart", (done) => {
@@ -17,8 +28,8 @@ describe("MODEL Cart", () => {
       .post("/")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .then(response => {
-        const { body, status } = response
-      })
-  })
-})
+      .then((response) => {
+        const { body, status } = response;
+      });
+  });
+});

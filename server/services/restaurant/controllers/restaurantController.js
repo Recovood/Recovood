@@ -9,7 +9,7 @@ class RestaurantController {
       // console.log(UserId);
       // const UserId = 1 // for testing purposes
       const { name, address, image_url } = req.body;
-      console.log(UserId), ">>> UserID";
+      // console.log(UserId), ">>> UserID";
       const restaurant = await Restaurant.create({
         UserId: UserId,
         name,
@@ -101,7 +101,7 @@ class RestaurantController {
         .status(200)
         .json({ message: "Restaurant successfully deleted" });
 
-      res.status(200).json({ restaurant });
+      // res.status(200).json({ restaurant });
     } catch (error) {
       next(error);
     }
