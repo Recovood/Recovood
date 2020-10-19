@@ -37,8 +37,6 @@ function HomeScreen(props) {
   
   const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
-  console.log(error, "<<<<<< errornya disini mas")
-
   if (loading) {
     return (
       <View>
@@ -60,7 +58,6 @@ function HomeScreen(props) {
         <Text style={styles.headerText}>Place name, City</Text>
         <Text style={styles.headerText}>within, 3000km</Text>
       </View>
-      {/* <ScrollView style={styles.scrollFood}> */}
         <FlatList
           data={data.getFoods}
           renderItem={({ item }) => {
@@ -100,7 +97,6 @@ function HomeScreen(props) {
           }}
           keyExtractor={(item) => item.id}
         />
-      {/* </ScrollView> */}
     </View>
   );
 }
@@ -131,23 +127,19 @@ const styles = StyleSheet.create({
     marginVertical: 25,
     paddingHorizontal: 25
   },
-  // scrollFood: {
-  //   height: "100%",
-  //   width: "100%",
-  //   backgroundColor: "#fff"
-  // },
   restaurantImg: {
     height: 50,
     width: 50,
     borderRadius: 100,
     resizeMode: "cover",
-    marginHorizontal: 20
+    // marginHorizontal: 20
   },
   containerItemWrapper: {
     flexDirection: "row"
   },
   restaurantInfo: {
-    justifyContent: "center"
+    justifyContent: "center",
+    marginHorizontal: 10
   }
 });
 

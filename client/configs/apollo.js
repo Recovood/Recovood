@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, makeVar, gql } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context'
 
 // const httpLink = createHttpLink({
@@ -34,9 +34,27 @@ import { setContext } from '@apollo/client/link/context'
 
 // })
 
+export const userToken = makeVar(null);
+
+export const GET_USER_TOKEN = gql`
+  query {
+    userToken @client
+  }
+`;
+
 const client = new ApolloClient({
   uri: "http://172.18.0.1:4000/",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ typePolicies: {
+    Query: {
+      fields: {
+        userToken: {
+          read() {
+            return userToken()
+          }
+        }
+      }
+    }
+  } }),
   // link: auth
 });
 
