@@ -9,7 +9,7 @@ import {
   Platform,
   TouchableOpacity
 } from "react-native";
-import Food from "../../dummy";
+import Food from "../dummy";
 
 function HomeScreen(props) {
 

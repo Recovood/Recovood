@@ -6,11 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Background from '../assets/background.png'
 import Button from '../components/Button'
 
-export default function Login() {
+export default function Login(props) {
   const [visibility, setVisibility] = useState(false)
   const setPasswordVisibility = () =>{
     setVisibility(!visibility)
   }
+
+  console.log(props.navigation.navigate, "<<<<< ini props");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,7 +36,7 @@ export default function Login() {
         </View>
       </View>
       <View>
-        <Button content='Login'/>
+        <Button content='Login' onPress={() => props.navigation.navigate("Home")} />
         <Text style={styles.footer}>Forgot your password?</Text>
       </View>
       </ImageBackground>
