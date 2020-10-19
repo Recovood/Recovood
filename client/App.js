@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native";
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import { Provider } from "react-redux";
 // import store from "./store/index";
-import { Cart, Login, FoodList, FoodDetails } from "./screens/index";
+import { Cart, Login, FoodList, FoodDetails, SignUp } from "./screens/index";
 
 
 const Stack = createStackNavigator();
@@ -17,6 +17,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login"  screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="FoodList" component={FoodList} />
           <Stack.Screen name="FoodDetails" component={FoodDetails} />
           <Stack.Screen name="Cart" component={Cart} />

@@ -35,7 +35,7 @@ export default function Login() {
       </View>
       <View>
         <Button content='Login'/>
-        <Text style={styles.footer}>Forgot your password?</Text>
+        <Text style={styles.footer}>Don't have account?</Text>
       </View>
       </ImageBackground>
     </SafeAreaView>
@@ -71,7 +71,8 @@ const styles = StyleSheet.create( {
   },
   footer:{
     fontSize: 20,
-    color: "white"
+    color: "white",
+    textAlign: "center"
   },
   touachableButton: {
     position: 'absolute',
