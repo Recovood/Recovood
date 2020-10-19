@@ -11,6 +11,6 @@ router.get("/carts", CartController.getCarts)
 router.patch("/carts/:id", CartController.updateQuantity)
 router.delete("/carts/:id", CartController.deleteCart)
 router.patch("/checkout", CartController.checkout)
-
+router.post("/midtrans", CartController.midtrans )
 
 module.exports = router
