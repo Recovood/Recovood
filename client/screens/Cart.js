@@ -9,6 +9,7 @@ import {
   Platform,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator
 } from "react-native";
 import { gql, useMutation, useQuery } from "@apollo/client";
 
@@ -52,7 +53,7 @@ function Cart(props) {
   const { data, loading, error } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpNEBtYWlsLmNvbSIsImlkIjoxMCwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAzMTA4MDQxfQ.JNpTWIHKLkdg99N-DzbCOYefBaONtXSkLBDjuqWbcvM"
       }
     }
   }
@@ -60,13 +61,23 @@ function Cart(props) {
   console.log(data)
   console.log(error, "<<< ini error");
 
-  const [pay] = useMutation(PAYMENT, {
+  const [pay, { loading: LoadingPayment }] = useMutation(PAYMENT, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpNEBtYWlsLmNvbSIsImlkIjoxMCwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAzMTA4MDQxfQ.JNpTWIHKLkdg99N-DzbCOYefBaONtXSkLBDjuqWbcvM"
       }
     }
   });
+
+  if (LoadingPayment) {
+    return (
+      <ActivityIndicator
+        style={{ flex: 1 }} 
+        size="large"
+        color="#0000ff"
+      />
+    )
+  }
 
   function payButtonHandler() {
     console.log("test");
@@ -150,14 +161,14 @@ function Cart(props) {
       <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
         Order Summary
       </Text>
-      <ScrollView style={{ flex: 10 }}>
+      {/* <ScrollView style={{ flex: 10 }}> */}
         <FlatList
-          style={{ flex: 2, flexDirection: "row" }}
+          style={{ flex: 2, flexDirection: "column" }}
           data={data.getAllCarts}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
-      </ScrollView>
+      {/* </ScrollView> */}
       <View style={{ width: "100%", alignItems: "center", }}>
         <Text
           style={{

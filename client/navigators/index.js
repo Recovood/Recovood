@@ -42,10 +42,10 @@ function Navigator() {
 function DetailsNavigator() {
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Navigator} />
       <Stack.Screen name="FoodDetails" component={FoodDetails} />
+      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Payment" component={PaymentPage}/>
     </Stack.Navigator>
   )

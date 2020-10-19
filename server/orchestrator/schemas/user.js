@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server");
 const axios = require("axios");
 
-const userUrl = "http://localhost:3010"
+const userUrl = "http://localhost:4010"
 
 const typeDefs = gql `
 

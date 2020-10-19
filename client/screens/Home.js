@@ -37,6 +37,8 @@ function HomeScreen(props) {
   
   const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
+  console.log(error, "<<<<<< errornya disini mas")
+
   if (loading) {
     return (
       <View>
