@@ -38,7 +38,7 @@ function Cart(props) {
         console.log(res);
         let payResponse = res.data.payment
 
-        navigation.navigate("Payment", { payResponse })
+        props.navigation.navigate("Payment", { payResponse })
 
       })
   }

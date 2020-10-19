@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableHighlight} from 'react-native'
 
 
-const Button = ({content, onPress}) => {
+function Button ({content, onPress}){
     return (
         <TouchableHighlight style={styles.container} onPress={onPress}>
             <Text style={styles.text}>{content}</Text>
