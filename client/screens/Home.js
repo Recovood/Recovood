@@ -9,19 +9,58 @@ import {
   Platform,
   TouchableOpacity
 } from "react-native";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+
 import Food from "../dummy";
 
-function HomeScreen(props) {
+const GET_ALL_FOODS = gql`
+  query getFoods {
+    getFoods {
+      id
+      name
+      image_url
+      price
+      stock
+      ingredient
+      Restaurant {
+        id
+        name
+        address
+        image_url
+      }
+    }
+  }
+`;
 
+function HomeScreen(props) {
+  
+  const { loading, error, data } = useQuery(GET_ALL_FOODS);
+
+  if (loading) {
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View>
+        <Text>Error</Text>
+      </View>
+    );
+  }
+  
   return (
     <View style={styles.container}>
       <View style={Platform.OS === "android" ? styles.header: styles.headerIOS}>
         <Text style={styles.headerText}>Place name, City</Text>
         <Text style={styles.headerText}>within, 3000km</Text>
       </View>
-      <ScrollView style={styles.scrollFood}>
+      {/* <ScrollView style={styles.scrollFood}> */}
         <FlatList
-          data={Food}
+          data={data.getFoods}
           renderItem={({ item }) => {
             return (
               <View style={styles.containerItem}>
@@ -49,7 +88,7 @@ function HomeScreen(props) {
                     }}
                   />
                   <Text style={{
-                    fontSize: 15,
+                    fontSize: 18,
                     color: "#BBBBDD",
                     fontWeight: "bold"
                   }}>{item.ingredient}</Text>
@@ -59,7 +98,7 @@ function HomeScreen(props) {
           }}
           keyExtractor={(item) => item.id}
         />
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 }
@@ -90,11 +129,11 @@ const styles = StyleSheet.create({
     marginVertical: 25,
     paddingHorizontal: 25
   },
-  scrollFood: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "#fff"
-  },
+  // scrollFood: {
+  //   height: "100%",
+  //   width: "100%",
+  //   backgroundColor: "#fff"
+  // },
   restaurantImg: {
     height: 50,
     width: 50,
