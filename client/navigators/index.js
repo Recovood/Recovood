@@ -23,7 +23,7 @@ function Navigator() {
           {focused ? <View style={{ width: 30, height: 3, backgroundColor: "#404040", marginTop: 3 }} /> : null}
         </View>
       ) }} />
-      <Tab.Screen name="Gps" component={Home} options={{ tabBarLabel: ({ focused }) => {}, tabBarIcon: ({ focused }) => (
+      <Tab.Screen name="Cart" component={Cart} options={{ tabBarLabel: ({ focused }) => {}, tabBarIcon: ({ focused }) => (
         <View>
           <Image style={{ height: 30, width: 30 }} source={require("../assets/gps.png")} />
           {focused ? <View style={{ width: 30, height: 3, backgroundColor: "#404040", marginTop: 3 }} /> : null}
@@ -42,10 +42,10 @@ function Navigator() {
 function DetailsNavigator() {
   return (
     <Stack.Navigator headerMode="none">
+      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Navigator} />
       <Stack.Screen name="FoodDetails" component={FoodDetails} />
-      <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="Payment" component={PaymentPage}/>
     </Stack.Navigator>
   )
