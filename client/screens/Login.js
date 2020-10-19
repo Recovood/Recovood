@@ -69,10 +69,10 @@ export default function Login(props) {
     >
       <SafeAreaView style={styles.container}>
         <ImageBackground source={Background} style={styles.image}> 
-        <View style={{ backgroundColor: "#19e680", borderRadius: 10, opacity: 0.9 }}>
+        <View style={{ backgroundColor: "#19e680", borderRadius: 10, opacity: 0.9, marginHorizontal: 20 }}>
           <Text style={styles.title}>RECOVOOD</Text>
         </View>
-        <View>
+        <View style={{ marginHorizontal: 20 }}>
           <TextInput value={email} style={styles.textInput} placeholder="Email" onChangeText={inputEmail}/>
           <View style={styles.textBoxContainer}>
             <TextInput value={password} style={styles.textInput} placeholder="Password" secureTextEntry={visibility} onChangeText={inputPassword} />
@@ -87,10 +87,10 @@ export default function Login(props) {
             </TouchableOpacity>
           </View>
         </View>
-        <View>
+        <View style={{ marginHorizontal: 40 }}>
           <Button content='Login' onPress={() => submitHandler(email, password)} />
-          <TouchableOpacity>
-            <Text style={styles.footer}>Forgot your password?</Text>
+          <TouchableOpacity onPress={() => props.navigation.navigate("SignUp")}>
+            <Text style={styles.footer}>Register</Text>
           </TouchableOpacity>
         </View>
         </ImageBackground>
@@ -129,7 +129,9 @@ const styles = StyleSheet.create( {
   footer:{
     textAlign: "center",
     fontSize: 20,
-    color: "white"
+    color: "white",
+    textAlign: "center",
+    fontWeight: "600"
   },
   touachableButton: {
     position: 'absolute',

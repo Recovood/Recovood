@@ -11,7 +11,7 @@ const LogoutTest = () => {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", marginHorizontal: 30 }}>
       <Button
         onPress={handleLogout}
         title="Logout"

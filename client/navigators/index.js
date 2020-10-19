@@ -11,6 +11,7 @@ import Cart from "../screens/Cart";
 import PaymentPage from "../screens/PaymentPage";
 import Login from "../screens/Login";
 import FoodList from "../screens/FoodDetails";
+import SignUp from "../screens/SignUp";
 
 import LogoutTest from "../screens/LogoutTest";
 import { userToken, GET_USER_TOKEN } from "../configs/apollo";
@@ -22,16 +23,16 @@ const Tab = createMaterialBottomTabNavigator();
 function Navigator() {
 
   return (
-    <Tab.Navigator headerMode="none" style={{ backgroundColor: "#404040" }} barStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20, backgroundColor: "#fff", elevation: 10, borderWidth: 1 }}>
+    <Tab.Navigator headerMode="none" style={{ backgroundColor: "#404040" }} barStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20, backgroundColor: "#fff", elevation: 10 }}>
       <Tab.Screen name="Home" component={Home} options={{ tabBarLabel: ({ focused }) => {}, tabBarIcon: ({ focused }) => (
         <View>
-          <Image style={{ height: 30, width: 30 }} source={require("../assets/home.png")} />
+          <Image style={{ height: 30, width: 30 }} source={require("../assets/gps.png")} />
           {focused ? <View style={{ width: 30, height: 3, backgroundColor: "#404040", marginTop: 3 }} /> : null}
         </View>
       ) }} />
       <Tab.Screen name="Cart" component={Cart} options={{ tabBarLabel: ({ focused }) => {}, tabBarIcon: ({ focused }) => (
         <View>
-          <Image style={{ height: 30, width: 30 }} source={require("../assets/gps.png")} />
+          <Image style={{ height: 30, width: 30 }} source={require("../assets/home.png")} />
           {focused ? <View style={{ width: 30, height: 3, backgroundColor: "#404040", marginTop: 3 }} /> : null}
         </View>
       ) }} />
@@ -77,7 +78,10 @@ function DetailsNavigator() {
             <Stack.Screen name="Payment" component={PaymentPage}/>
           </>
         ) : (
-          <Stack.Screen name="Login" component={Login} />
+          <>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+          </>
         )
       }
     </Stack.Navigator>
