@@ -6,6 +6,7 @@ import { Image, View } from "react-native";
 import Home from "../screens/Home";
 import FoodDetails from "../screens/FoodDetails";
 import Cart from "../screens/Cart";
+import PaymentPage from "../screens/PaymentPage";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,7 @@ function DetailsNavigator() {
       <Stack.Screen name="Home" component={Navigator} />
       <Stack.Screen name="FoodDetails" component={FoodDetails} />
       <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="Payment" component={PaymentPage} />
     </Stack.Navigator>
   )
 }

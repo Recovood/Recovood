@@ -11,10 +11,38 @@ import {
 } from "react-native";
 import PopupDetail from "../components/PopupDetail";
 
+
+const PAYMENT = gql`
+  mutation payment{
+    payment{
+      token
+      redirect_url
+    }
+  }
+`;
+
 function Cart(props) {
-  console.log(props);
 
   const [isPress, setIsPress] = useState(false);
+
+  const [pay] = useMutation(PAYMENT, {
+    context: {
+      headers: {
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+      }
+    }
+  });
+
+  function payButtonHandler() {
+    pay() //insert detail to send to backend
+      .then((res) => {
+        console.log(res);
+        let payResponse = res.data.payment
+
+        navigation.navigate("Payment", { payResponse })
+
+      })
+  }
 
   return (
     <View style={{ paddingVertical: 60, paddingHorizontal: 25 }}>
@@ -92,7 +120,7 @@ function Cart(props) {
             borderRadius: 100,
             height: 40,
           }}
-          onPress={() => props.navigation.navigate("Home")}
+          onPress={payButtonHandler}
         >
           <Text style={{ color: "#fff", fontSize: 20, fontWeight: "bold" }}>
             Pay Now
