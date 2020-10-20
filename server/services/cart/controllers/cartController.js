@@ -193,6 +193,46 @@ class CartController {
       next(error);
     }
   }
+
+  static async midtrans(req, res, next) {
+    try {
+      let snap = new midtransClient.Snap({
+        // Set to true if you want Production Environment (accept real transaction).
+        isProduction: false,
+        serverKey: "SB-Mid-server-1zuSI64YfBbKXCqz5_MzKCXV",
+      });
+
+      let parameter = {
+        transaction_details: {
+          order_id: "YOUR-ORDERID-123456",
+          gross_amount: 10000,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          first_name: "budi",
+          last_name: "pratama",
+          email: "budi.pra@example.com",
+          phone: "08111222333",
+        },
+      };
+
+      snap
+        .createTransaction(parameter)
+        .then((transaction) => {
+          // transaction token
+          let midtransResponse = transaction;
+          // console.log(transaction);
+          res.status(200).json({ midtransResponse });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = CartController;

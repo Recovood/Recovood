@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 const axios = require("axios");
 // const Redis = require("ioredis");
 // const redis = new Redis();
-const url = "http://localhost:3030/foods";
+const url = "http://localhost:4030/foods";
 
 const typeDefs = gql`
   type Food {
@@ -13,6 +13,7 @@ const typeDefs = gql`
     stock: Int
     ingredient: String
     RestaurantId: ID
+    Restaurant: Restaurant
   }
 
   extend type Query {

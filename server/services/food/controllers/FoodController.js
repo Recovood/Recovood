@@ -1,4 +1,4 @@
-const { Food } = require("../models");
+const { Food, Restaurant } = require("../models");
 
 class FoodController {
   static async addFood(req, res, next) {
@@ -28,7 +28,7 @@ class FoodController {
 
   static async getFoods(req, res, next) {
     try {
-      const foods = await Food.findAll();
+      const foods = await Food.findAll({ include: [ Restaurant ] });
       return res.status(200).json(foods);
     } catch (err) {
       // console.log(err, "<<<< error in getFoods Food Controller");
