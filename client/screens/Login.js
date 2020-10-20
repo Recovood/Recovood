@@ -7,7 +7,7 @@ import * as SecureStore from "expo-secure-store";
 
 import Background from '../assets/background.png'
 import Button from '../components/Button'
-import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+import { userToken, getUsername, getEmail } from "../configs/apollo";
 
 const USER_LOGIN = gql`
   mutation login($user: userLogin) {
@@ -51,9 +51,12 @@ export default function Login(props) {
         }
       })
       SecureStore.setItemAsync("access_token", data.login.access_token);
-      // const access_token = await SecureStore.getItemAsync("access_token");
-      // console.log(access_token, "ini login");
+      SecureStore.setItemAsync("username", data.login.username);
+      SecureStore.setItemAsync("email", data.login.email);
+
       userToken(data.login.access_token);
+      getUsername(data.login.username);
+      getEmail(data.login.email);
     } catch(err) {
       console.log(err);
     }
@@ -90,7 +93,7 @@ export default function Login(props) {
         <View style={{ marginHorizontal: 40 }}>
           <Button content='Login' onPress={() => submitHandler(email, password)} />
           <TouchableOpacity onPress={() => props.navigation.navigate("SignUp")}>
-            <Text style={styles.footer}>Register</Text>
+            <Text style={styles.footer}>Sign Up</Text>
           </TouchableOpacity>
         </View>
         </ImageBackground>

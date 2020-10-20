@@ -74,7 +74,7 @@ function Cart(props) {
       <ActivityIndicator
         style={{ flex: 1 }} 
         size="large"
-        color="#0000ff"
+        color="#376444"
       />
     )
   }

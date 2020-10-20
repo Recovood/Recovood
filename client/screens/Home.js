@@ -1,18 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   FlatList,
   Image,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
-import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
-import Food from "../dummy";
+import * as Location from "expo-location";
 
 const GET_ALL_FOODS = gql`
   query getFoods {
@@ -37,11 +36,48 @@ function HomeScreen(props) {
   
   const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
+  const [ location, setLocation ] = useState(null);
+  const [ errorMsg, setErrorMsg ] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      console.log(status, "<<<<<< ini statusnya")
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+      }
+      console.log("ini kena bos")
+      try {
+        await Location.watchPositionAsync({}, (geolog) => {
+          console.log(geolog, "<<<<< ini geolocnya")
+          setLocation(geolog);
+        });
+      } catch (err) {
+        console.log(err, "<<<<< ini error locationnya");
+      }
+    })();
+  }, []);
+
+  // let text = "Waiting..";
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify(location);
+  // }
+
+  // return (
+  //   <View style={{ flex: 1, marginVertical: 50 }}>
+  //     <Text>{text}</Text>
+  //   </View>
+  // )
+
   if (loading) {
     return (
-      <View>
-        <Text>Loading</Text>
-      </View>
+      <ActivityIndicator
+        style={{ flex: 1 }} 
+        size="large"
+        color="#376444"
+      />
     );
   }
   if (error) {
@@ -55,8 +91,8 @@ function HomeScreen(props) {
   return (
     <View style={styles.container}>
       <View style={Platform.OS === "android" ? styles.header: styles.headerIOS}>
-        <Text style={styles.headerText}>Place name, City</Text>
-        <Text style={styles.headerText}>within, 3000km</Text>
+        <Text style={styles.headerText}>Our Best Deals</Text>
+        <Text style={styles.headerText}>Around You</Text>
       </View>
         <FlatList
           data={data.getFoods}
@@ -120,6 +156,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "#fff",
+    fontWeight: "700",
+    fontSize: 20
   },
   containerItem: {
     width: "100%",
