@@ -10,8 +10,9 @@ import {
   ActivityIndicator
 } from "react-native";
 import { gql, useQuery } from "@apollo/client";
-
 import * as Location from "expo-location";
+
+import { nearby, GET_NEARBY } from "../configs/apollo";
 
 const GET_ALL_FOODS = gql`
   query getFoods {
@@ -34,12 +35,36 @@ const GET_ALL_FOODS = gql`
   }
 `;
 
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
 function HomeScreen(props) {
   
   const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
-  const [ location, setLocation ] = useState(null);
+  const [ latitude, setLatitude ] = useState(0);
+  const [ longitude, setLongitude ] = useState(0);
+  const [ nearby, setNearby ] = useState([]);
   const [ errorMsg, setErrorMsg ] = useState(null);
+
+  const { data: getNearby } = useQuery(GET_NEARBY, {
+    refetchQueries: [{ query: GET_NEARBY }]
+  });
 
   useEffect(() => {
     (async () => {
@@ -48,11 +73,11 @@ function HomeScreen(props) {
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
       }
-      console.log("ini kena bos")
       try {
         await Location.watchPositionAsync({}, (geolog) => {
           console.log(geolog, "<<<<< ini geolocnya")
-          setLocation(geolog);
+          setLatitude(geolog.coords.latitude);
+          setLongitude(geolog.coords.longitude);
         });
       } catch (err) {
         console.log(err, "<<<<< ini error locationnya");
@@ -89,7 +114,15 @@ function HomeScreen(props) {
       </View>
     );
   }
-  console.log(data, "<<<<< ini datanya bosku");
+  // if (data) {
+  //   if (latitude && longitude) {
+  //     for(let i = 0; i < data.getFoods.length; i++) {
+  //       let distance = getDistanceFromLatLonInKm(latitude, longitude, data.getFoods[i].Restaurant.longitude, data.getFoods[i].Restaurant.latitude);
+  //       console.log(distance, "<<<<<<< jaraknya")
+  //     }
+  //   }
+  //   console.log(getNearby, "<<<<< ini nearbies");
+  // }
   
   return (
     <View style={styles.container}>
