@@ -4,12 +4,11 @@ const { checkPassword } = require("../helpers/bcrypt");
 const { OAuth2Client } = require("google-auth-library");
 
 class UserController {
-
   static async showHome(req, res, next) {
     try {
       return res.status(200).json({ message: "Recovood Server" });
     } catch (err) {
-      console.log(err, "<<<< error in showHome UserController");
+      // console.log(err, "<<<< error in showHome UserController");
       return next(err);
     }
   }
@@ -18,20 +17,20 @@ class UserController {
     const { access_token } = req.headers;
     try {
       const userData = verifyToken(access_token);
-      console.log(userData, "<<<< this is userData");
-      
+      // console.log(userData, "<<<< this is userData");
+
       const user = await User.findOne({
         where: {
-          email: userData.email
-        }
+          email: userData.email,
+        },
       });
       if (user) {
         return res.status(200).json(userData);
       } else {
-        throw { message: "User is not authenticatd", statusCode: 401 };
+        throw { message: "User is not authenticated", statusCode: 401 };
       }
-    } catch(err) {
-      console.log(err, "<<<< error in userAuthentication");
+    } catch (err) {
+      // console.log(err, "<<<< error in userAuthentication");
       return next(err);
     }
   }
@@ -43,31 +42,32 @@ class UserController {
         username,
         email,
         password,
-        role
+        role,
       });
       const access_token = generateToken(user);
       return res.status(201).json({
         access_token: access_token,
         email: user.email,
         role: user.role,
-        username: user.username
+        username: user.username,
       });
-    } catch(err) {
-      console.log(err, "<<<< error in register UserController");
+    } catch (err) {
+      // console.log(err, "<<<< error in register UserController");
       return next(err);
     }
   }
-  
+
   static async login(req, res, next) {
     try {
       const user = await User.findOne({
         where: {
-          email: req.body.email
-        }
+          email: req.body.email,
+        },
       });
       if (!user) {
-        throw { 
-          message: "Invalid email or password", statusCode: 400 
+        throw {
+          message: "Invalid email or password",
+          statusCode: 400,
         };
       }
       const isValid = checkPassword(req.body.password, user.password);
@@ -77,16 +77,16 @@ class UserController {
           access_token: access_token,
           email: user.email,
           role: user.role,
-          username: user.username
+          username: user.username,
         });
       } else {
         throw {
           message: "Invalid email or password",
-          statusCode: 400
+          statusCode: 400,
         };
       }
-    } catch(err) {
-      console.log(err, "<<<< error in login UserController");
+    } catch (err) {
+      // console.log(err, "<<<< error in login UserController");
       return next(err);
     }
   }
@@ -97,7 +97,7 @@ class UserController {
     try {
       const ticket = await client.verifyIdToken({
         idToken: google_access_token,
-        audience: process.env.CLIENT_ID
+        audience: process.env.CLIENT_ID,
       });
       const payload = ticket.getPayload();
       console.log(payload);
@@ -106,28 +106,31 @@ class UserController {
       const profile_picture = payload.picture;
       const user = await User.findOne({
         where: {
-          email: payload.email
-        }
+          email: payload.email,
+        },
       });
       if (!user) {
         const userObj = {
           username: getUserName,
           email: payload.email,
-          password: "fullstack"
+          password: "fullstack",
         };
         const addUser = await User.create(userObj);
         const access_token = generateToken(addUser);
-        return res.status(200).json({ access_token, avatar: profile_picture, email: google_email });
+        return res
+          .status(200)
+          .json({ access_token, avatar: profile_picture, email: google_email });
       } else {
         const access_token = generateToken(user);
-        return res.status(200).json({ access_token, avatar: profile_picture, email: google_email });
+        return res
+          .status(200)
+          .json({ access_token, avatar: profile_picture, email: google_email });
       }
     } catch (err) {
-      console.log(err, "<<<< error in googleLogin UserController");
+      // console.log(err, "<<<< error in googleLogin UserController");
       return next(err);
     }
   }
-
 }
 
 module.exports = UserController;

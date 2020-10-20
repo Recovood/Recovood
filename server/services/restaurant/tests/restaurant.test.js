@@ -150,6 +150,7 @@ describe("Model Restaurant", () => {
       });
   });
 
+  // FAILED ADD
   test("Failed Add: name field is null", (done) => {
     request(app)
       .post("/restaurants")
@@ -188,6 +189,26 @@ describe("Model Restaurant", () => {
       });
   });
 
+  test("Failed Add: invalid input image url", (done) => {
+    request(app)
+      .post("/restaurants")
+      .send({
+        name: "Ayam Bu Vesti",
+        address: "Jl. Pangeran Antasari, No.11",
+        image_url: "image",
+      })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .then((res) => {
+        const { body, status } = res;
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("errors");
+        expect(body.errors[0]).toBe("Please input invalid image url");
+        done();
+      });
+  });
+
+  // FAILED READ
   test("Failed Read: restaurant not found", (done) => {
     request(app)
       .get(`/restaurants/${2}`)
@@ -202,6 +223,7 @@ describe("Model Restaurant", () => {
       });
   });
 
+  // FAILED UPDATE
   test("Failed Updata: name field is null", (done) => {
     request(app)
       .put(`/restaurants/${idOfRestaurant}`)
@@ -234,6 +256,25 @@ describe("Model Restaurant", () => {
         expect(status).toBe(400);
         expect(body).toHaveProperty("errors");
         expect(body.errors[0]).toBe("address required");
+        done();
+      });
+  });
+
+  test("Failed Update: invalid input image url", (done) => {
+    request(app)
+      .put(`/restaurants/${idOfRestaurant}`)
+      .send({
+        name: "Ayam Bu Vesti",
+        address: "Jl. Pangeran Antasari, No.11",
+        image_url: "image",
+      })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .then((res) => {
+        const { body, status } = res;
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("errors");
+        expect(body.errors[0]).toBe("Please input invalid image url");
         done();
       });
   });

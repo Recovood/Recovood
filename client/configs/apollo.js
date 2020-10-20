@@ -1,5 +1,10 @@
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 // const httpLink = createHttpLink({
 //   credentials: "same-origin",
@@ -22,7 +27,7 @@ import { setContext } from '@apollo/client/link/context'
 // }));
 
 // const auth = new ApolloLink((operation, forward) => {
-//   const access_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ" 
+//   const access_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
 
 //   operation.setContext({
 //     headers: {
@@ -35,9 +40,9 @@ import { setContext } from '@apollo/client/link/context'
 // })
 
 const client = new ApolloClient({
-  uri: "http://192.168.0.23:4000/",
+  uri: "http://192.168.0.198:4000/",
   cache: new InMemoryCache(),
   // link: auth
 });
 
-export default client
+export default client;
