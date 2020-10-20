@@ -14,11 +14,13 @@ import {
 import { gql, useMutation, useQuery } from "@apollo/client";
 import PayModal from "../components/PayModal"
 import { Dropdown } from 'react-native-material-dropdown-v2';
+import TrxModal from "../components/TrxModal"
+
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
 
-const GET_ALL_CARTS = gql`
+export const GET_ALL_CARTS = gql`
   query getAllCarts{
     getAllCarts{
       id
@@ -46,34 +48,54 @@ const GET_ALL_CARTS = gql`
   }
 `
 
-
+const GET_ALL_TRANSACTION = gql`
+query getAllTransactions{
+  getAllTransactions{
+    transactionId
+    UserId
+    orderId
+    totalAmount
+    paymentType
+    transactionStatus
+  }
+     
+}
+`
 
 
 function Cart(props) {
 
   const [isPress, setIsPress] = useState(false);
+  const [isTrxPress, setIsTrxPress ] = useState(false)
+  const [midtransTrxId, setMidtransTrxId] = useState()
   const [cartStatus, setCartStatus] = useState("Waiting for Checkout")
   const [totalPrice, setTotalPrice] = useState(0)
   const { data, loading, error } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
       }
     }
   }
   )
-
-
-  useEffect(() => {
-    if (loading === true && data) {
-      let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
-      countedCarts.forEach(cart => {
-        console.log(cart.Food.price, cart.quantity, "<<< price")
-        setTotalPrice(totalPrice + (cart.Food.price * cart.quantity))
-        console.log(totalPrice);
-      })
+  const { data: dataTrx, loading: loadingTrx, error: errorTrx } = useQuery(GET_ALL_TRANSACTION, {
+    context: {
+      headers: {
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+      }
     }
-  }, [loading])
+  })
+
+  // useEffect(() => {
+  //   if (loading === true && data) {
+  //     let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
+  //     countedCarts.forEach(cart => {
+  //       console.log(cart.Food.price, cart.quantity, "<<< price")
+  //       setTotalPrice(+totalPrice + (+cart.Food.price * +cart.quantity))
+  //       console.log(totalPrice);
+  //     })
+  //   }
+  // }, [loading])
 
   let cartStatusOption = [
     { value: "Waiting for Checkout" },
@@ -82,7 +104,7 @@ function Cart(props) {
     { value: "Done" }
   ]
 
-  function payButtonHandler(){
+  function payButtonHandler() {
     setIsPress(true)
   }
 
@@ -93,9 +115,9 @@ function Cart(props) {
   }
 
 
-  const renderItem = ({ item }) => {
+  const renderItemCarts = ({ item }) => {
     return (
-      <View>
+      <View style= {{flex: 1}}>
         <Image
           style={{ height: 150, width: 150, borderRadius: 20 }}
           source={{
@@ -149,9 +171,43 @@ function Cart(props) {
     )
   }
 
+  const renderItemTrx = ({ item }) => {
+    return (
+
+      <TouchableOpacity 
+        onPress={()=> {
+          setIsTrxPress(true)
+          setMidtransTrxId(item.transactionId)
+        }} 
+        style={{ justifyContent: "space-between",alignItems: "flex-start" }}
+        >
+          <Image
+            style={{ height: 30, width: 30, backgroundColor: "pink" }}
+            source={require("../assets/home.png")}
+          />
+        <View style={{flexDirection: "column", padding: 0}}>
+
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: "#404040", backgroundColor: "pink" }}>
+            {item.orderId}
+          </Text>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "#404040",
+              marginVertical: 10,
+            }}
+          >
+            Rp{item.totalAmount}
+          </Text>
+        </View>
+        <View style={styles.line}></View>
+      </TouchableOpacity>
+    )
+  }
 
 
-  if (loading || data === undefined) {
+  if (loading || data === undefined || loadingTrx) {
     return (
       <ActivityIndicator
         style={{ flex: 1 }}
@@ -167,60 +223,88 @@ function Cart(props) {
         Order Summary
       </Text> */}
       <Dropdown
-        label='Shopping Cart'
         data={cartStatusOption}
         onChangeText={(text) => changeLabelHandler(text)}
         itemCount={3}
         dropdownPosition={-4}
         value={"Waiting for Checkout"}
       />
-      {/* <ScrollView style={{ flex: 10 }}> */}
-      <FlatList
-        style={{ flex: 2, flexDirection: "column" }}
-        data={data.getAllCarts.filter(cart => cart.status === cartStatus)}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        ListFooterComponent={
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 25,
-              // color: "#404040",
-              color: "black",
-              marginVertical: 10,
-              flex: 1
-            }}
-          >
-            Total {totalPrice}
-          </Text>
-        }
-      />
-      {/* </ScrollView> */}
+      { cartStatus !== "Pending" ?
+        <FlatList
+          style={{ flex: 2, flexDirection: "column" }}
+          data={data.getAllCarts.filter(cart => cart.status === cartStatus)}
+          renderItem={renderItemCarts}
+          keyExtractor={(item) => item.id}
+          ListFooterComponent={
+            cartStatus === "Waiting for Checkout" ?
+              <View>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 25,
+                    // color: "#404040",
+                    color: "black",
+                    marginVertical: 10,
+                    flex: 1
+                  }}
+                >
+                  Total {totalPrice}
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    width: "80%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#376444",
+                    borderRadius: 100,
+                    height: 40,
+                    marginBottom: 20
+                  }}
+                  onPress={payButtonHandler}
+                >
+                  <Text style={{ color: "#fff", fontSize: 20, fontWeight: "bold" }}>
+                    Pay Now
+                    </Text>
+                </TouchableOpacity>
+              </View>
+              :
+              null
+          }
+        />
+        :
+        <FlatList
+          style={{ flex: 2, flexDirection: "column" }}
+          data={dataTrx.getAllTransactions}
+          renderItem={renderItemTrx}
+          keyExtractor={(item) => item.id}
+        />
+      }
+
       <View style={{ width: "100%", alignItems: "center", }}>
-        <TouchableOpacity
-          style={{
-            width: "80%",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#376444",
-            borderRadius: 100,
-            height: 40,
-            marginBottom: 20
-          }}
-          onPress={payButtonHandler}
-        >
-          <Text style={{ color: "#fff", fontSize: 20, fontWeight: "bold" }}>
-            Pay Now
-          </Text>
-        </TouchableOpacity>
+
         <PayModal
           isPress={isPress}
           setIsPress={() => setIsPress(false)}
           checkoutCarts={data.getAllCarts.filter(cart => cart.status === cartStatus)}
+        />
+        <TrxModal
+          isTrxPress={isTrxPress}
+          setIsTrxPress = {() => setIsTrxPress(false)}
+          midtransTrxId={midtransTrxId}
         />
       </View>
     </View >
   );
 }
 
+const styles = StyleSheet.create({
+  line: {
+    width: 150,
+    height: 2,
+    backgroundColor: "#D3D3D3",
+    marginHorizontal: 50,
+    alignSelf: "center",
+    marginVertical: 10
+  },
+})
 export default Cart;

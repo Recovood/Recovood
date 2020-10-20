@@ -1,8 +1,9 @@
 
-import {  ActivityIndicator, Image, View, StyleSheet, FlatList, ScrollView, Text, Dimensions, TouchableHighlight, TouchableOpacity } from "react-native"
+import { ActivityIndicator, Image, View, StyleSheet, FlatList, ScrollView, Text, Dimensions, TouchableHighlight, TouchableOpacity } from "react-native"
 import React, { useState } from "react"
 import Modal from 'react-native-modal'
 import { gql, useMutation } from "@apollo/client"
+import { GET_ALL_CARTS } from "../screens/Cart"
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -12,7 +13,7 @@ const PAYMENT_BANK = gql`
     $paymentType: String
     $bankName: String
     $orderId: String
-    $totalPrice: String,
+    $totalPrice: Int,
   ){
     paymentBank(
       paymentInfo:{
@@ -39,26 +40,34 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
       }
-    }
+    },
+    refetchQueries: [{
+      query: GET_ALL_CARTS, context: {
+        headers: {
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+        }
+      }
+    }]
   });
   function bankPayButton(bank) {  //BCA, BNI, BRI
-    let paymentType = 'bank_account';
-    let bankType = bank
+    let paymentType = 'bank_transfer';
+    let bankName = bank
     let orderId = "RCVD"
-    let totalPrice = ""
-    checkoutCarts.forEach(cart=> {
+    let totalPrice = 0
+    checkoutCarts.forEach(cart => {
       orderId = orderId + cart.id
+      orderId = orderId + Date.now()
     })
     checkoutCarts.forEach(cart => {
-      console.log(cart.Food.price, cart.quantity, "<<< price")
-      totalPrice= totalPrice + (cart.Food.price * cart.quantity)
+      totalPrice = +totalPrice + (+cart.Food.price * +cart.quantity)
     })
+    console.log(totalPrice);
     paymentBank({
       variables: {
         paymentType,
-        bankType,
+        bankName,
         orderId,
         totalPrice
       }
@@ -66,11 +75,16 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   }
   if (LoadingPayment) {
     return (
-      <ActivityIndicator
-        style={{ flex: 1 }}
-        size="large"
-        color="#376444"
-      />
+      <Modal
+        animationIn="slideInUp"
+        animationOut={"slideOutDown"}
+        style={styles.modal}>
+        <ActivityIndicator
+          style={{ flex: 1 }}
+          size="large"
+          color="#376444"
+        />
+      </Modal>
     )
   }
 
@@ -92,37 +106,37 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
             <Image source={require("../assets/arrow.png")} style={{ transform: [{ rotateY: '180deg' }] }} />
           </View>
 
-          <View style={styles.line}/>
+          <View style={styles.line} />
 
           <TouchableOpacity
             style={styles.paymentOptionContainer}
-            onPress={() => { isBankClick?setIsBankClick(false):setIsBankClick(true) }}
+            onPress={() => { isBankClick ? setIsBankClick(false) : setIsBankClick(true) }}
           >
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
               <Text style={styles.paymentOptionText}>Bank Account</Text>
               <Image
                 source={require("../assets/arrow.png")}
-                style={isBankClick?{ transform: [{ rotateX: '0deg' }] }:{ transform: [{ rotateY: '180deg' }] }}
+                style={isBankClick ? { transform: [{ rotateX: '0deg' }] } : { transform: [{ rotateY: '180deg' }] }}
               />
             </View>
           </TouchableOpacity>
           {
-            isBankClick?
-            <View
-              style={styles.bankOptionContainer}
-            >
-              <TouchableOpacity onPress={()=>{bankPayButton("bri")}}><Text style={styles.bankOption}>BRI (Virtual Account)</Text></TouchableOpacity>
-              <View style={styles.line}/>
-              <TouchableOpacity ><Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
-              <View style={styles.line}/>
-              <TouchableOpacity ><Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
-              <View style={styles.line}/>
-              <TouchableOpacity ><Text style={styles.bankOption}>Other Banks</Text></TouchableOpacity>
-            </View>
-            :
-            null
+            isBankClick ?
+              <View
+                style={styles.bankOptionContainer}
+              >
+                <TouchableOpacity onPress={() => { bankPayButton("bri") }}><Text style={styles.bankOption}>BRI (Virtual Account)</Text></TouchableOpacity>
+                <View style={styles.line} />
+                <TouchableOpacity ><Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
+                <View style={styles.line} />
+                <TouchableOpacity ><Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
+                <View style={styles.line} />
+                <TouchableOpacity ><Text style={styles.bankOption}>Other Banks</Text></TouchableOpacity>
+              </View>
+              :
+              null
           }
-              <View style={styles.line}/>
+          <View style={styles.line} />
 
           <View style={styles.paymentOptionContainer}>
             <Text style={styles.paymentOptionText}>Go Pay</Text>
@@ -161,10 +175,10 @@ const styles = StyleSheet.create({
   paymentOptionText: {
     fontSize: 20
   },
-  bankOptionContainer:{
+  bankOptionContainer: {
     paddingLeft: 30
   },
-  bankOption:{
+  bankOption: {
     fontSize: 18,
     padding: 5
   },

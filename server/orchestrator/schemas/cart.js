@@ -12,11 +12,20 @@ const typeDefs = gql`
     Food: Food
   }
 
+  type Transaction{
+    transactionId: String,
+    UserId: Int,
+    orderId: String,
+    totalAmount: Int,
+    paymentType: String,
+    transactionStatus: String
+  }
+
   type paymentBankResponse{
     statusMessage: String,
     transactionId: String,
     orderId: String,
-    totalPrice: String,
+    totalPrice: Int,
     paymentType: String,
     transactionTime: String,
     transactionStatus: String,
@@ -30,6 +39,8 @@ const typeDefs = gql`
 
   extend type Query {
     getAllCarts: [Cart]
+    getAllTransactions: [Transaction]
+    getMidtransTransaction(midtransTrxId:String): paymentBankResponse
   }
 
   extend type Mutation {
@@ -43,7 +54,7 @@ const typeDefs = gql`
     paymentType: String,
     bankName: String,
     orderId: String,
-    totalPrice: String,
+    totalPrice: Int,
   }
 
   input cartInput{
@@ -55,42 +66,91 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getAllCarts: async(_, args, context) => {
+    getAllTransactions: async(_, args, context)=> {
       try {
-        if (context.user === undefined){
-          throw("auth error")
+        if (context.user === undefined) {
+          throw ("auth error")
         }
         let UserId = context.user.id
-        console.log(context.user.id, "<<user"); 
-        let {data} = await Axios({
+        let { data } = await Axios({
+          method: "GET",
+          url: `${urlCart}/transactions`,
+          headers: {
+            user_id: +UserId
+          }
+        })
+        console.log(data.transactions)
+        data = data.transactions
+        return data
+      } catch (error) {
+        if (error === "auth error") {
+          throw new AuthenticationError("must be authenticated")
+        } else if (error.statusCode === 400) {
+          console.log(error);
+          throw new UserInputError(error.response.data.errors[0], error.statusCode)
+        } else {
+          return error
+        }
+      }
+    },
+    getAllCarts: async (_, args, context) => {
+      try {
+        if (context.user === undefined) {
+          throw ("auth error")
+        }
+        let UserId = context.user.id
+        console.log(context.user.id, "<<user");
+        let { data } = await Axios({
           method: "GET",
           url: `${urlCart}/carts`,
           headers: {
             user_id: +UserId
           }
         })
-        
+
         data = data.carts
         console.log(data);
         return data
       } catch (error) {
-        if (error === "auth error"){
+        if (error === "auth error") {
           throw new AuthenticationError("must be authenticated")
         } else if (error.statusCode === 400) {
           console.log(error);
           throw new UserInputError(error.response.data.errors[0], error.statusCode)
-        } else{
+        } else {
           return error
         }
       }
 
+    },
+    getMidtransTransaction: async(_,args, context)=> {
+      try {
+        if (context.user === undefined) {
+          throw ("auth error")
+        }
+        let { data } = await Axios({
+          method: "GET",
+          url: `${urlCart}/midtrans/${args.midtransTrxId}`,
+        })
+        console.log(data)
+        return data
+      } catch (error) {
+        if (error === "auth error") {
+          throw new AuthenticationError("must be authenticated")
+        } else if (error.statusCode === 400) {
+          console.log(error);
+          throw new UserInputError(error.response.data.errors[0], error.statusCode)
+        } else {
+          return error
+        }
+      }
     }
   },
   Mutation: {
-    addCart: async(_, args, context) => {
+    addCart: async (_, args, context) => {
       try {
-        if (context.user === undefined){
-          throw("auth error")
+        if (context.user === undefined) {
+          throw ("auth error")
         }
         let UserId = context.user.id
         let id = args.id
@@ -98,10 +158,10 @@ const resolvers = {
           FoodId,
           quantity,
           status
-        }= args.newCart
-        
+        } = args.newCart
+
         console.log(status, "sebelum");
-        let {data} = await Axios({
+        let { data } = await Axios({
           method: "POST",
           url: `${urlCart}/carts`,
           headers: {
@@ -113,33 +173,33 @@ const resolvers = {
             status
           }
         })
-        
+
         console.log(data, "<<<<<");
         return data
       } catch (error) {
-        if (error === "auth error"){
+        if (error === "auth error") {
           throw new AuthenticationError("must be authenticated")
         } else if (error.statusCode === 400) {
           console.log(error);
           throw new UserInputError(error.response.data.errors[0], error.statusCode)
-        } else{
+        } else {
           return error
         }
       }
 
     },
-    updateCartQuantity: async(_, args, context) => {
+    updateCartQuantity: async (_, args, context) => {
       try {
-        if (context.user === undefined){
-          throw("auth error")
+        if (context.user === undefined) {
+          throw ("auth error")
         }
         let id = args.id
         let UserId = context.user.id
         let {
           quantity,
-        }= args.newCart
-  
-        let {data} = await Axios({
+        } = args.newCart
+
+        let { data } = await Axios({
           method: "PATCH",
           url: `${urlCart}/carts/${id}`,
           headers: {
@@ -149,88 +209,86 @@ const resolvers = {
             quantity,
           }
         })
-        
+
         return data
       } catch (error) {
-        if (error === "auth error"){
+        if (error === "auth error") {
           throw new AuthenticationError("must be authenticated")
         } else if (error.statusCode === 400) {
           console.log(error);
           throw new UserInputError(error.response.data.errors[0], error.statusCode)
-        } else{
+        } else {
           return error
         }
       }
     },
 
-    deleteCart: async(_, args, context) => {
+    deleteCart: async (_, args, context) => {
       try {
-        if (context.user === undefined){
-          throw("auth error")
+        if (context.user === undefined) {
+          throw ("auth error")
         }
         let id = args.id
         let UserId = context.user.id
-  
-        let {data} = await Axios({
+
+        let { data } = await Axios({
           method: "DELETE",
           url: `${urlCart}/carts/${id}`,
           headers: {
             user_id: +UserId
           },
         })
-        
+
         return data
       } catch (error) {
-        if (error === "auth error"){
+        if (error === "auth error") {
           throw new AuthenticationError("must be authenticated")
         } else if (error.statusCode === 400) {
           console.log(error);
           throw new UserInputError(error.response.data.errors[0], error.statusCode)
-        } else{
+        } else {
           return error
         }
       }
     },
 
-    // payment: async (_, args, context) => {
-    //   try {
-    //     if (context.user === undefined){
-    //       throw("auth error")
-    //     }
-    //     // let UserId = context.user.id
-    //     // let id = args.id
-    //     // let {
-    //     // }= args.newCart
-  
-    //     let {data} = await Axios({
-    //       method: "POST",
-    //       url: `${urlCart}/midtrans`,
-    //       //not ready for production | add customer details by sending data to this endpoint
-    //     })
-        
-    //     console.log(data, "<<<<<cartresolver");
-    //     return data.midtransResponse
-    //   } catch (error) {
-    //     if (error === "auth error"){
-    //       throw new AuthenticationError("must be authenticated")
-    //     } else if (error.statusCode === 400) {
-    //       console.log(error);
-    //       throw new UserInputError(error.response.data.errors[0], error.statusCode)
-    //     } else{
-    //       return error
-    //     }
-    //   }
-    // },
+
+
 
     paymentBank: async (_, args, context) => {
-      const {     
-        paymentType,
-        bankName,
-        orderId,
-        totalPrice
-      } = args.paymentInfo
-      const {username, email} = context.user
-      console.log(args.paymentInfo, username, email)
+      try {
+        console.log("masuk ke graphql")
+        const {
+          paymentType,
+          bankName,
+          orderId,
+          totalPrice
+        } = args.paymentInfo
+        const { id, username, email } = context.user
+        let { data } = await Axios({
+          method: "POST",
+          url: `${urlCart}/midtrans`,
+          data: {
+            paymentType,
+            bankName,
+            orderId,
+            totalPrice,
+            username, email, id
+          }
+        })
+
+        console.log(data, "response dari endopoint midtrans");
+
+      } catch (error) {
+        if (error === "auth error") {
+          throw new AuthenticationError("must be authenticated")
+        } else if (error.statusCode === 400) {
+          console.log(error);
+          throw new UserInputError(error.response.data.errors[0], error.statusCode)
+        } else {
+          return error
+        }
+      }
     }
   }
 }
