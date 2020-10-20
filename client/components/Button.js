@@ -5,7 +5,6 @@ import { View, Text, StyleSheet} from 'react-native'
 const Button = ({content}) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{content}</Text>
         </View>
     )
 }
