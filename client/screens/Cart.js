@@ -207,7 +207,7 @@ function Cart(props) {
   }
 
 
-  if (loading || data === undefined || loadingTrx) {
+  if (loading || loadingTrx) {
     return (
       <ActivityIndicator
         style={{ flex: 1 }}
@@ -217,11 +217,16 @@ function Cart(props) {
     )
   }
 
+  if (data === undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "#404040", fontSize: 20 }}>Cart is empty</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={{ justifyContent: "space-between", flexDirection: "column", flex: 1, paddingTop: 60, paddingHorizontal: 25 }}>
-      {/* <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
-        Order Summary
-      </Text> */}
       <Dropdown
         data={cartStatusOption}
         onChangeText={(text) => changeLabelHandler(text)}

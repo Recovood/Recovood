@@ -2,13 +2,56 @@ import { useState } from "react"
 import { Button, Text, View, StyleSheet, Dimensions, TextInput, TouchableHighlight, Pressable, Image, TouchableOpacity } from "react-native"
 import Modal from 'react-native-modal'
 import React from 'react'
+import { gql, useQuery, useMutation } from "@apollo/client";
+
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
 
+const ADD_CART = gql`
+  mutation addCart($newCart: cartInput) {
+    addCart(newCart: $newCart){
+      id
+      status
+      quantity
+      UserId
+      FoodId
+    }
+  }
+`;
+
 export default function PopupDetail({ isPress, setFalse= () => {}, address, price, navigation, item }) {
   
   const [ quantity, setQuantity ] = useState(1);
+
+  const [ addToCart, { data } ] = useMutation(ADD_CART, {
+    context: {
+      headers: {
+        access_token: userToken()
+      }
+    }
+  });
+
+  console.log(userToken(), "<<<< token");
+  const handleAddCart = async() => {
+    const newItem = {
+      quantity: quantity,
+      status: "Waiting for Checkout",
+      FoodId: item.id
+    }
+    console.log(newItem, "<<<<< ini dia")
+    try {
+      await addToCart({
+        variables: {
+          newCart: newItem
+        }
+      })
+      navigation.navigate("Home");
+    } catch(err) {
+      console.log(err, "<<<<<< kena ini");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -50,7 +93,10 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
             <Text>Rp{parseInt(price) * quantity}</Text>
           </View>
           <View style={styles.line}></View>
-          <Pressable style={styles.reserveButton} onPress={() => { setFalse(), navigation.navigate("Cart", item={item: item, totalPrice: parseInt(price) * quantity}) }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
+          <Pressable style={styles.reserveButton}
+            onPress={() => { setFalse(), 
+            handleAddCart()
+          }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
 
         </View>
       </Modal>

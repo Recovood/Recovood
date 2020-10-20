@@ -26,6 +26,12 @@ module.exports = {
       image_url: {
         type: Sequelize.STRING
       },
+      longitude: {
+        type: Sequelize.DECIMAL
+      },
+      latitude: {
+        type: Sequelize.DECIMAL
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
