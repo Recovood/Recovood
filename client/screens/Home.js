@@ -27,6 +27,8 @@ const GET_ALL_FOODS = gql`
         name
         address
         image_url
+        longitude
+        latitude
       }
     }
   }
@@ -87,6 +89,7 @@ function HomeScreen(props) {
       </View>
     );
   }
+  console.log(data, "<<<<< ini datanya bosku");
   
   return (
     <View style={styles.container}>
@@ -107,8 +110,8 @@ function HomeScreen(props) {
                     }}
                   />
                   <TouchableOpacity style={styles.restaurantInfo} onPress={() => props.navigation.navigate("FoodDetails", item=item)}>
-                    <Text style={{ fontWeight: "bold", fontSize: 18, color: "#404040" }}>{item.Restaurant.name}</Text>
-                    <Text style={{ color: "#C6C6D5", fontWeight: "bold" }}>{item.Restaurant.address}</Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 18, color: "#404040", textAlign:"justify", marginRight: 45 }}>{item.Restaurant.name}</Text>
+                    <Text style={{ color: "#C6C6D5", fontWeight: "bold", textAlign: "justify", marginRight: 45 }}>{item.Restaurant.address}</Text>
                   </TouchableOpacity>
                 </View>
                 <View>
@@ -125,7 +128,8 @@ function HomeScreen(props) {
                   <Text style={{
                     fontSize: 18,
                     color: "#BBBBDD",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
+                    textAlign: "justify"
                   }}>{item.ingredient}</Text>
                 </View>
               </View>

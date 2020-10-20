@@ -53,7 +53,7 @@ function DetailsNavigator() {
   return (
     <Stack.Navigator headerMode="none">
       {
-        isLoggedIn.userToken ? (
+        !isLoggedIn.userToken ? (
           <>     
             <Stack.Screen name="Home" component={Navigator} />
             <Stack.Screen name="FoodDetails" component={FoodDetails} />
