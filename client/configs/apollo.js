@@ -35,7 +35,7 @@ import { setContext } from '@apollo/client/link/context'
 // })
 
 const client = new ApolloClient({
-  uri: "http://192.168.0.23:4000/",
+  uri: "http://192.168.1.74:4000/",
   cache: new InMemoryCache(),
   // link: auth
 });

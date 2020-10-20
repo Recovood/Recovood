@@ -40,13 +40,13 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
       }
     },
     refetchQueries: [{
       query: GET_ALL_CARTS, context: {
         headers: {
-          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
         }
       }
     }]

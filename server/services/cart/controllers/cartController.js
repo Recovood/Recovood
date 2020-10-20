@@ -308,7 +308,7 @@ class CartController {
       const transaction_id = req.params.midtransTrxId
       core.transaction.status(transaction_id)
         .then((response) => {
-
+          console.log(response, "<<<<<<< response cart controller");
           res.status(200).json({
             statusMessage: response.status_message,
             transactionId: response.transaction_id,
