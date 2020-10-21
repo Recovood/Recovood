@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Restaurant extends Model {
     /**
@@ -14,18 +12,33 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.User);
       Restaurant.hasMany(models.Food);
     }
-  };
-  Restaurant.init({
-    UserId: DataTypes.INTEGER,
-    name: {
-      type: DataTypes.STRING,
-      validate:{
-        notEmpty: {
-          args: true,
-          msg: "name required"
-        }
-      }
+  }
+  Restaurant.init(
+    {
+      UserId: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "name required",
+          },
+        },
+      },
+      address: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: "address required",
+          },
+        },
+      },
+      image_url: DataTypes.STRING,
+      longitude: DataTypes.DECIMAL,
+      latitude: DataTypes.DECIMAL,
     },
+<<<<<<< HEAD
     address: {
       type: DataTypes.STRING,
       validate:{
@@ -42,5 +55,12 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Restaurant',
   });
+=======
+    {
+      sequelize,
+      modelName: "Restaurant",
+    }
+  );
+>>>>>>> UpdateTesting
   return Restaurant;
 };

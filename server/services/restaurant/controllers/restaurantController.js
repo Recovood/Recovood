@@ -1,11 +1,11 @@
 const { Restaurant } = require("../models");
-// const {} = require
 
 class RestaurantController {
   static async create(req, res, next) {
     // console.log(req, "ini res create restaurant");
     try {
       let UserId = +req.headers.user_id;
+      const { name, address, image_url, longitude, latitude } = req.body;
       // console.log(UserId);
       // const UserId = 1 // for testing purposes
       const { name, address, image_url, longitude, latitude } = req.body;
@@ -19,17 +19,15 @@ class RestaurantController {
         latitude,
       });
 
-      res
-        .status(201)
-        .json({
-          UserId: restaurant.UserId,
-          id: restaurant.id,
-          name: restaurant.name,
-          address: restaurant.address,
-          image_url: restaurant.image_url,
-          longitude: restaurant.longitude,
-          latitude: restaurant.latitude,
-        });
+      res.status(201).json({
+        UserId: restaurant.UserId,
+        id: restaurant.id,
+        name: restaurant.name,
+        address: restaurant.address,
+        image_url: restaurant.image_url,
+        longitude: restaurant.longitude,
+        latitude: restaurant.latitude,
+      });
     } catch (error) {
       next(error);
     }
@@ -60,17 +58,15 @@ class RestaurantController {
         };
         next(error);
       } else {
-        res
-          .status(200)
-          .json({
-            UserId: restaurant.UserId,
-            id: restaurant.id,
-            name: restaurant.name,
-            address: restaurant.address,
-            image_url: restaurant.image_url,
-            longitude: restaurant.longitude,
-            latitude: restaurant.latitude,
-          });
+        res.status(200).json({
+          UserId: restaurant.UserId,
+          id: restaurant.id,
+          name: restaurant.name,
+          address: restaurant.address,
+          image_url: restaurant.image_url,
+          longitude: restaurant.longitude,
+          latitude: restaurant.latitude,
+        });
       }
     } catch (error) {
       next(error);
@@ -86,17 +82,15 @@ class RestaurantController {
         { where: { id }, returning: true }
       );
       const restaurant = data[1][0].dataValues;
-      res
-        .status(200)
-        .json({
-          UserId: restaurant.UserId,
-          id: restaurant.id,
-          name: restaurant.name,
-          address: restaurant.address,
-          image_url: restaurant.image_url,
-          longitude: restaurant.longitude,
-          latitude: restaurant.latitude,
-        });
+      res.status(200).json({
+        UserId: restaurant.UserId,
+        id: restaurant.id,
+        name: restaurant.name,
+        address: restaurant.address,
+        image_url: restaurant.image_url,
+        longitude: restaurant.longitude,
+        latitude: restaurant.latitude,
+      });
     } catch (error) {
       next(error);
     }

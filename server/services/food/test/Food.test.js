@@ -1,39 +1,57 @@
 const request = require("supertest");
 const app = require("../app");
-const { Food } = require("../models");
-const { sequelize } = require("../models");
+const { sequelize, User, Restaurant } = require("../models");
 const { queryInterface } = sequelize;
 
 let FoodId;
+let restaurants;
+let user;
+
+beforeAll(async (done) => {
+  user = await User.create({
+    username: "admin",
+    email: "admin@mail.com",
+    password: "adminganteng",
+    role: "admin",
+  });
+
+  restaurants = await Restaurant.create({
+    UserId: user.id,
+    name: "Ayam Bu Vesti",
+    address: "Jl. Pangeran Antasari, No.11",
+    image_url: "www.image.com",
+    longitude: -7.66519,
+    latitude: 111.31629,
+  });
+  done();
+});
 
 afterAll((done) => {
-  queryInterface
-    .bulkDelete("Food", null, {})
-    .then(() => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
+  queryInterface.bulkDelete("Food", null, {}).then(() => done());
+  queryInterface.bulkDelete("Restaurants", null, {}).then(() => done());
+  queryInterface.bulkDelete("Users", null, {}).then(() => done());
 });
 
 describe("Food Endpoint Test", () => {
-  const addFood = {
-    name: "Nasi Padang",
-    image_url:
-      "https://travel.tribunnews.com/2020/02/24/4-fakta-unik-rumah-makan-padang-ada-lagu-berjudul-nasi-padang",
-    price: 18000,
-    stock: 10,
-    ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
-    RestaurantId: 1,
-  };
-
   // SUCCESS CRUD FOOD
 
-  it("Success add Food, return json with foods data", (done) => {
+  test("Success add Food, return json with foods data", (done) => {
+    // console.log(user, ">>>>>>>>>> userADDfood");
+    // console.log(restaurants, ">>>>>>>>>> restaurantsADDfood");
+
     request(app)
       .post("/foods")
-      .send(addFood)
+      .send({
+        name: "Nasi Padang",
+        image_url:
+          "https://travel.tribunnews.com/2020/02/24/4-fakta-unik-rumah-makan-padang-ada-lagu-berjudul-nasi-padang",
+        price: 18000,
+        stock: 10,
+        ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
+        RestaurantId: restaurants.id,
+      })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
       .then((res) => {
         const { body, status } = res;
         FoodId = body.id;
@@ -76,7 +94,7 @@ describe("Food Endpoint Test", () => {
         price: 9000,
         stock: 5,
         ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
-        RestaurantId: 1,
+        RestaurantId: restaurants.id,
       })
       .then((res) => {
         const { body, status } = res;
@@ -148,7 +166,7 @@ describe("Food Endpoint Test", () => {
         price: -10,
         stock: 10,
         ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
-        RestaurantId: 1,
+        RestaurantId: restaurants.id,
       })
       .then((res) => {
         const { body, status } = res;
@@ -170,7 +188,7 @@ describe("Food Endpoint Test", () => {
         price: 10,
         stock: -10,
         ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
-        RestaurantId: 1,
+        RestaurantId: restaurants.id,
       })
       .then((res) => {
         const { body, status } = res;
@@ -221,7 +239,7 @@ describe("Food Endpoint Test", () => {
 
   const minusPriceMsg = ["Price must be greater than or equals to 0"];
 
-  it("Fail add food because price is negative number", (done) => {
+  it("Fail update food because price is negative number", (done) => {
     request(app)
       .put(`/foods/${FoodId}`)
       .send(minusUpdatePrice)
@@ -246,7 +264,7 @@ describe("Food Endpoint Test", () => {
 
   const minusStockMsg = ["Stock must be greater than or equals to 0"];
 
-  it("Fail add food because stock is negative number", (done) => {
+  it("Fail update food because stock is negative number", (done) => {
     request(app)
       .put(`/foods/${FoodId}`)
       .send(minusUpdateStock)
@@ -274,7 +292,7 @@ describe("Food Endpoint Test", () => {
     "Stock must be in numeric format!",
   ];
 
-  it("Fail add food because invalid data type", (done) => {
+  it("Fail delete food because invalid data type", (done) => {
     request(app)
       .put(`/foods/${FoodId}`)
       .send(invalidDataTypeUpdate)
