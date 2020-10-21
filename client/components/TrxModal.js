@@ -1,34 +1,62 @@
-import { useState } from "react"
-import { ActivityIndicator, Button, Text, View, StyleSheet, Dimensions, TextInput, TouchableHighlight, Pressable, Image, TouchableOpacity } from "react-native"
-import Modal from 'react-native-modal'
-import React from 'react'
-import { gql, useQuery } from "@apollo/client"
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  TouchableHighlight,
+  Pressable,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import Modal from "react-native-modal";
+import React from "react";
+import { gql, useQuery } from "@apollo/client";
+
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
 
 const GET_TRX_INFO = gql`
-query getAllTransactions($midtransTrxId: String){
-  getAllTransactions(midtransTrxId: $midtransTrxId){
-    transactionId
-    UserId
-    orderId
-    totalAmount
-    paymentType
-    transactionStatus
+  query getMidtransTransaction($midtransTrxId: String) {
+    getMidtransTransaction(midtransTrxId: $midtransTrxId) {
+      statusMessage
+      transactionId
+      orderId
+      totalPrice
+      paymentType
+      transactionTime
+      transactionStatus
+      vaNumber
+      bank
+    }
   }
-}
-`
+`;
 
 export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
-  const { data, loading } = useQuery(GET_TRX_INFO, { variables: { midtransTrxId } })
+  console.log(midtransTrxId, "<<<<< midrant")
+  const { data, loading, error } = useQuery(GET_TRX_INFO, {
+    variables: {
+      midtransTrxId: "1f78975e-664c-4e7d-bfcd-981b4081552f"
+    },
+    context: {
+      headers: {
+        access_token:
+          userToken(),
+      },
+    },
+  });
 
-  if(loading){
-    return(
-      <ActivityIndicator
-      style={{ flex: 1 }}
-      size="large"
-      color="#376444"
-    />
-    )
+  console.log(loading, error, data, "<<<< ini loading error data");
+
+  if (loading) {
+    return (
+      <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
+    );
   }
+
+  console.log(error, "<<<<<<<< ini error");
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <Modal
@@ -37,24 +65,26 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
         animationOut={"slideOutDown"}
         swipeThreshold={80}
         swipeDirection="down"
-        onSwipeComplete={() => { setIsTrxPress(false) }}
-        onBackdropPress={() => { setIsTrxPress(false) }}
+        onSwipeComplete={() => {
+          setIsTrxPress(false);
+        }}
+        onBackdropPress={() => {
+          setIsTrxPress(false);
+        }}
         style={styles.modal}
       >
-        {loading ?
+        {loading ? (
+          <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
+        ) : (
           <View>
-            <Text>{data.id}</Text>
+            <Text>VA Number {data.getMidtransTransaction.vaNumber}</Text>
+            <Text>Payment Type {data.getMidtransTransaction.paymentType}</Text>
+            <Text>Bank {data.getMidtransTransaction.bank}</Text>
           </View>
-          :
-          <ActivityIndicator
-            style={{ flex: 1 }}
-            size="large"
-            color="#376444"
-          />
-        }
+        )}
       </Modal>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -69,6 +99,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
 
-    flex: 1
+    flex: 1,
   },
-})
+});

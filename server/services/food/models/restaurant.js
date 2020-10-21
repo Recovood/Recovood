@@ -35,7 +35,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    image_url: DataTypes.STRING
+    image_url: DataTypes.STRING,
+    longitude: DataTypes.DECIMAL,
+    latitude: DataTypes.DECIMAL
   }, {
     sequelize,
     modelName: 'Restaurant',

@@ -124,6 +124,7 @@ const resolvers = {
 
     },
     getMidtransTransaction: async(_,args, context)=> {
+      console.log("<<<<<<<<<<<<<<<<<< masuk ke sini");
       try {
         if (context.user === undefined) {
           throw ("auth error")

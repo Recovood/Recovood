@@ -16,6 +16,8 @@ import PayModal from "../components/PayModal"
 import { Dropdown } from 'react-native-material-dropdown-v2';
 import TrxModal from "../components/TrxModal"
 
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -73,7 +75,7 @@ function Cart(props) {
   const { data, loading, error } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+        access_token: userToken()
       }
     }
   }
@@ -81,21 +83,21 @@ function Cart(props) {
   const { data: dataTrx, loading: loadingTrx, error: errorTrx } = useQuery(GET_ALL_TRANSACTION, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+        access_token: userToken()
       }
     }
   })
 
-  // useEffect(() => {
-  //   if (loading === true && data) {
-  //     let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
-  //     countedCarts.forEach(cart => {
-  //       console.log(cart.Food.price, cart.quantity, "<<< price")
-  //       setTotalPrice(+totalPrice + (+cart.Food.price * +cart.quantity))
-  //       console.log(totalPrice);
-  //     })
-  //   }
-  // }, [loading])
+  useEffect(() => {
+    if (data) {
+      let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
+      countedCarts.forEach(cart => {
+        console.log(cart.Food.price, cart.quantity, "<<< price")
+        setTotalPrice(+totalPrice + (+cart.Food.price * +cart.quantity))
+        console.log(totalPrice, "<<<<< hasilnya");
+      })
+    }
+  }, [])
 
   let cartStatusOption = [
     { value: "Waiting for Checkout" },
@@ -207,7 +209,7 @@ function Cart(props) {
   }
 
 
-  if (loading || data === undefined || loadingTrx) {
+  if (loading || loadingTrx) {
     return (
       <ActivityIndicator
         style={{ flex: 1 }}
@@ -217,11 +219,16 @@ function Cart(props) {
     )
   }
 
+  if (data === undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "#404040", fontSize: 20 }}>Cart is empty</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={{ justifyContent: "space-between", flexDirection: "column", flex: 1, paddingTop: 60, paddingHorizontal: 25 }}>
-      {/* <Text style={{ fontWeight: "bold", color: "#404040", fontSize: 30 }}>
-        Order Summary
-      </Text> */}
       <Dropdown
         data={cartStatusOption}
         onChangeText={(text) => changeLabelHandler(text)}
@@ -237,7 +244,7 @@ function Cart(props) {
           keyExtractor={(item) => item.id}
           ListFooterComponent={
             cartStatus === "Waiting for Checkout" ?
-              <View>
+              <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
                     fontWeight: "bold",
@@ -287,11 +294,14 @@ function Cart(props) {
           setIsPress={() => setIsPress(false)}
           checkoutCarts={data.getAllCarts.filter(cart => cart.status === cartStatus)}
         />
-        <TrxModal
-          isTrxPress={isTrxPress}
-          setIsTrxPress = {() => setIsTrxPress(false)}
-          midtransTrxId={midtransTrxId}
-        />
+        {
+          midtransTrxId && 
+          <TrxModal
+            isTrxPress={isTrxPress}
+            setIsTrxPress = {() => setIsTrxPress(false)}
+            midtransTrxId={midtransTrxId}
+          />
+        }
       </View>
     </View >
   );

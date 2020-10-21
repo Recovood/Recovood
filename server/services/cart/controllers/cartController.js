@@ -309,7 +309,7 @@ class CartController {
       const transaction_id = req.params.midtransTrxId
       core.transaction.status(transaction_id)
         .then((response) => {
-
+          console.log(response, "<<<<<<< response cart controller");
           res.status(200).json({
             statusMessage: response.status_message,
             transactionId: response.transaction_id,
@@ -328,7 +328,15 @@ class CartController {
     }
   }
 
-  static async midtransNotification(req, res, next) {
+  static async midtransTransaction(req, res, next) {
+    //FLOW: 
+    /*
+      1. Midtrans post data to /cart service 
+      2. /cart service GET trx status to Midtrans Server
+      3. Compare two result
+    */
+
+
     console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
     // console.log(res, "<<<<<<<<<<<<<<<<<<<ini response")
     let mockNotificationJson = {
@@ -344,7 +352,8 @@ class CartController {
       // 'transaction_time': '2018-10-24 15:34:33',
       // 'va_numbers': [{ 'bank': 'bca', 'va_number': '490526303019299' }]
     }
-    core.transaction.notification({'transaction_id': '4255dc29-76c7-462c-88df-f30be2795f3e'})
+    // {'transaction_id': req.params.midtransTrxId}
+    core.transaction.notification(mockNotificationJson)
       .then((statusResponse) => {
         console.log(statusResponse, "<<<<<<<<< ini status response")
         let orderId = statusResponse.order_id;

@@ -9,7 +9,9 @@ type Restaurant{
   UserId: Int,
   name: String,
   address: String,
-  image_url: String
+  image_url: String,
+  longitude: Float,
+  latitude: Float
 }
 
 type MessageRestaurant{
@@ -29,7 +31,9 @@ extend type Mutation{
 input inputRestaurant{
   name: String,
   address: String,
-  image_url: String
+  image_url: String,
+  longitude: Float,
+  latitude: Float
 }
 `
 
@@ -88,7 +92,9 @@ const resolvers = {
         let {
           name,
           address,
-          image_url
+          image_url,
+          latitude,
+          longitude
         } = args.newRestaurant
 
         let { data } = await Axios({
@@ -100,7 +106,9 @@ const resolvers = {
           data: {
             name,
             address,
-            image_url
+            image_url,
+            latitude,
+            longitude
           }
         })
         console.log(data);
@@ -127,7 +135,9 @@ const resolvers = {
         let {
           name,
           address,
-          image_url
+          image_url,
+          latitude,
+          longitude
         } = args.newRestaurant
 
         let { data } = await Axios({
@@ -139,7 +149,9 @@ const resolvers = {
           data: {
             name,
             address,
-            image_url
+            image_url,
+            latitude,
+            longitude
           }
         })
 

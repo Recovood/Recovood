@@ -5,6 +5,8 @@ import Modal from 'react-native-modal'
 import { gql, useMutation } from "@apollo/client"
 import { GET_ALL_CARTS, GET_ALL_TRANSACTION } from "../screens/Cart"
 
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
 
@@ -40,13 +42,19 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+        access_token: userToken()
       }
     },
     refetchQueries: [{
       query: GET_ALL_CARTS, context: {
         headers: {
-          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpQG1haWwuY29tIiwiaWQiOjEsInJvbGUiOiJwZXRhbmkiLCJpYXQiOjE2MDMxODQ3MjB9.SuU_xWcOQoeDSL3yh_GlH7M-DZJPVtsEbpg0sFtdaPY"
+          access_token: userToken()
+        }
+      }
+    }, {
+      query: GET_ALL_TRANSACTION, context: {
+        headers: {
+          access_token: userToken()
         }
       },
       query: GET_ALL_TRANSACTION, context: {
@@ -63,8 +71,9 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
     let totalPrice = 0
     checkoutCarts.forEach(cart => {
       orderId = orderId + cart.id
-      orderId = orderId + Date.now()
     })
+    orderId = orderId + Date.now()
+    console.log(orderId.length);
     checkoutCarts.forEach(cart => {
       totalPrice = +totalPrice + (+cart.Food.price * +cart.quantity)
     })
@@ -77,6 +86,7 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
         totalPrice
       }
     })
+    setIsPress();
   }
   if (LoadingPayment) {
     return (

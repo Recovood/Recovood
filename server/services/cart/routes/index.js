@@ -13,7 +13,7 @@ router.delete("/carts/:id", CartController.deleteCart)
 router.patch("/checkout", CartController.checkout)
 router.post("/midtrans", CartController.midtrans)
 router.get("/midtrans/:midtransTrxId", CartController.getTransactionFromMidtrans)
-router.post("/midtrans/notification", CartController.midtransNotification)
+router.post("/midtrans/notification", CartController.midtransTransaction)
 router.get("/transactions", CartController.getTransactionFromDatabase)
 
 module.exports = router
