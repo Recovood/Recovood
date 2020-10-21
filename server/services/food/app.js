@@ -4,7 +4,7 @@ const cors = require("cors");
 const port = process.env.PORT || 3003;
 const app = express();
 const foodRouter = require("./routes");
-const errHandler = require("./middlewares/errHandler");
+const errHandler = require("./middlewares/errorHandler");
 
 // Body Parser
 app.use(express.json());

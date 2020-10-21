@@ -54,7 +54,7 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
           newCart: newItem
         }
       })
-      navigation.navigate("Cart");
+      setCartStatus("Pending")
     } catch(err) {
       console.log(JSON.stringify(err), "<<<<<< kena ini");
     }
@@ -155,7 +155,8 @@ const styles = StyleSheet.create({
     minHeight: windowHeight / 3,
     // borderRadius: 16px 16px 0px 0px;
     padding: 24,
-    borderRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     justifyContent: "space-evenly",
 
     // width: windowWidth/2,

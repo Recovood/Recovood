@@ -37,7 +37,7 @@ const PAYMENT_BANK = gql`
   }
 `; // BRI BCA BNI
 
-export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
+export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalPrice}) {
   const [isBankClick, setIsBankClick] = useState(false)
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
@@ -82,10 +82,13 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
       }
     })
     setIsPress();
+    setTotalPrice(0)
+    navigation.navigate("Cart", {menuName:"Pending"});
   }
   if (LoadingPayment) {
     return (
       <Modal
+        isVisible={true}
         animationIn="slideInUp"
         animationOut={"slideOutDown"}
         style={styles.modal}>
@@ -99,7 +102,7 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   }
 
   return (
-    <View style={{ display: "flex", flex: 1 }}>
+    <View style={{ display: "flex",alignContent:"flex-end", justifyContent: "flex-end",flex: 1 }}>
       <Modal
         isVisible={isPress}
         animationIn="slideInUp"
@@ -137,9 +140,9 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
               >
                 <TouchableOpacity onPress={() => { bankPayButton("bri") }}><Text style={styles.bankOption}>BRI (Virtual Account)</Text></TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity ><Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { bankPayButton("bca") }}><Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity ><Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { bankPayButton("permata") }}><Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
                 <View style={styles.line} />
                 <TouchableOpacity ><Text style={styles.bankOption}>Other Banks</Text></TouchableOpacity>
               </View>
@@ -178,7 +181,6 @@ const styles = StyleSheet.create({
 
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
 
     padding: 10
   },
@@ -203,11 +205,14 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: "white",
-    marginVertical: 100,
-    borderRadius: 40,
-
+    // marginVertical: 100,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    margin: 0,
+    marginTop: windowHeight/2,
     display: "flex",
     flexDirection: "column",
+    justifyContent: "flex-end",
     // justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
