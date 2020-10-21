@@ -8,7 +8,8 @@
     "start": "node app.js",
     "dev": "nodemon ./bin/www",
     "migration": "sequelize db:migrate",
-    "migration-test": "sequelize db:migrate --env test"
+    "migration-test": "sequelize db:migrate --env test",
+    "seeding": "sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
