@@ -296,7 +296,7 @@ class CartController {
   static async getTransactionFromDatabase(req, res, next) {
     try {
       const UserId = req.headers.user_id
-      let transactions = await Transaction.findAll({ UserId }, { include: [Cart] })
+      let transactions = await Transaction.findAll({ where: { UserId, transactionStatus: "pending" }, include: [Cart] })
       res.status(200).json({ transactions })
     } catch (err) {
       next(err)
@@ -305,6 +305,7 @@ class CartController {
 
   static async getTransactionFromMidtrans(req, res, next) {
     try {
+      console.log("test from trx MIdtrans")
       const transaction_id = req.params.midtransTrxId
       core.transaction.status(transaction_id)
         .then((response) => {
@@ -327,9 +328,25 @@ class CartController {
     }
   }
 
-  static async midtransNotification(req, res, next){
-    core.transaction.notification(mockNotificationJson)
-    .then((statusResponse)=>{
+  static async midtransNotification(req, res, next) {
+    console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
+    // console.log(res, "<<<<<<<<<<<<<<<<<<<ini response")
+    let mockNotificationJson = {
+      // 'currency': 'IDR',
+      // 'fraud_status': 'accept',
+      // 'gross_amount': '24145.00',
+      // 'order_id': 'test-transaction-321',
+      // 'payment_type': 'bank_transfer',
+      // 'status_code': '201',
+      // 'status_message': 'Success, Bank Transfer transaction is created',
+      'transaction_id': '4255dc29-76c7-462c-88df-f30be2795f3e',
+      // 'transaction_status': 'pending',
+      // 'transaction_time': '2018-10-24 15:34:33',
+      // 'va_numbers': [{ 'bank': 'bca', 'va_number': '490526303019299' }]
+    }
+    core.transaction.notification({'transaction_id': '4255dc29-76c7-462c-88df-f30be2795f3e'})
+      .then((statusResponse) => {
+        console.log(statusResponse, "<<<<<<<<< ini status response")
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
         let fraudStatus = statusResponse.fraud_status;
@@ -337,26 +354,27 @@ class CartController {
 
         // Sample transactionStatus handling logic
 
-        if (transactionStatus == 'capture'){
-            // capture only applies to card transaction, which you need to check for the fraudStatus
-            if (fraudStatus == 'challenge'){
-                // TODO set transaction status on your databaase to 'challenge'
-            } else if (fraudStatus == 'accept'){
-                // TODO set transaction status on your databaase to 'success'
-            }
-        } else if (transactionStatus == 'settlement'){
+        if (transactionStatus == 'capture') {
+          // capture only applies to card transaction, which you need to check for the fraudStatus
+          if (fraudStatus == 'challenge') {
+            // TODO set transaction status on your databaase to 'challenge'
+          } else if (fraudStatus == 'accept') {
             // TODO set transaction status on your databaase to 'success'
-            console.log("test")
-        } else if (transactionStatus == 'deny'){
-            // TODO you can ignore 'deny', because most of the time it allows payment retries
-            // and later can become success
+          }
+        } else if (transactionStatus == 'settlement') {
+          // TODO set transaction status on your databaase to 'success'
+          console.log("test")
+        } else if (transactionStatus == 'deny') {
+          // TODO you can ignore 'deny', because most of the time it allows payment retries
+          // and later can become success
         } else if (transactionStatus == 'cancel' ||
-          transactionStatus == 'expire'){
-            // TODO set transaction status on your databaase to 'failure'
-        } else if (transactionStatus == 'pending'){
-            // TODO set transaction status on your databaase to 'pending' / waiting payment
+          transactionStatus == 'expire') {
+          // TODO set transaction status on your databaase to 'failure'
+        } else if (transactionStatus == 'pending') {
+          // TODO set transaction status on your databaase to 'pending' / waiting payment
+          
         }
-    });
+      });
   }
 }
 

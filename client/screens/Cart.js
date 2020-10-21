@@ -48,7 +48,7 @@ export const GET_ALL_CARTS = gql`
   }
 `
 
-const GET_ALL_TRANSACTION = gql`
+export const GET_ALL_TRANSACTION = gql`
 query getAllTransactions{
   getAllTransactions{
     transactionId

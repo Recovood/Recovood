@@ -1,6 +1,6 @@
 const { gql, UserInputError, AuthenticationError } = require("apollo-server");
 const { default: Axios } = require("axios");
-const urlCart = "http://localhost:4040"
+const urlCart = "https://7932ea0592d8.ngrok.io"
 
 const typeDefs = gql`
   type Cart{
@@ -251,9 +251,6 @@ const resolvers = {
         }
       }
     },
-
-
-
 
     paymentBank: async (_, args, context) => {
       try {
