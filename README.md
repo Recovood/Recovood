@@ -42,37 +42,46 @@ Get your healthy food with a discounted price here.
   ```
   cd server/services/user
   ```
-  nodemon bin/www
-  _or_
+  ```
+  nodemon bin/www 
+  ```
+  ```
   nodemon app.js
   ```
 - Turning the food server on
   ```
   cd server/services/food
   ```
-  nodemon bin/www
-  _or_
+  ```
+  nodemon bin/www 
+  ```
+  ```
   nodemon app.js
   ```
 - Turning the restaurant server on
   ```
   cd server/services/restaurant
   ```
-  nodemon bin/www
-  _or_
+  ```
+  nodemon bin/www 
+  ```
+  ```
   nodemon app.js
   ```
 - Turning the cart server on
   ```
   cd server/services/cart
   ```
-  nodemon bin/www
-  _or_
+  ```
+  nodemon bin/www 
+  ```
+  ```
   nodemon app.js
   ```
 - Turning the orchestrator on
   ```
   cd server/orchestrator
+  ```
   ```
   nodemon app.js
   ```
