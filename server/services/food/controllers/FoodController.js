@@ -3,6 +3,7 @@ const { Food, Restaurant } = require("../models");
 class FoodController {
   static async addFood(req, res, next) {
     try {
+      console.log(req.body, ">>>> body req");
       const {
         name,
         image_url,
@@ -28,10 +29,10 @@ class FoodController {
 
   static async getFoods(req, res, next) {
     try {
-      const foods = await Food.findAll({ include: [ Restaurant ] });
+      const foods = await Food.findAll({ include: [Restaurant] });
       return res.status(200).json(foods);
     } catch (err) {
-      console.log(err, "<<<< error in getFoods Food Controller");
+      // console.log(err, "<<<< error in getFoods Food Controller");
       return next(err);
     }
   }
@@ -41,7 +42,7 @@ class FoodController {
       const food = await Food.findByPk(+req.params.id);
       return res.status(200).json(food);
     } catch (err) {
-      console.log(err, "<<<< error in getFood Food Controller");
+      // console.log(err, "<<<< error in getFood Food Controller");
       return next(err);
     }
   }
@@ -66,7 +67,7 @@ class FoodController {
       );
       return res.status(200).json(food[1][0]);
     } catch (err) {
-      console.log(err, "<<<< error in updateFood Food Controller");
+      // console.log(err, "<<<< error in updateFood Food Controller");
       return next(err);
     }
   }
@@ -82,7 +83,7 @@ class FoodController {
         .status(200)
         .json({ message: "Food has been deleted successfully" });
     } catch (err) {
-      console.log(err, "<<<< error in deleteFood Food Controller");
+      // console.log(err, "<<<< error in deleteFood Food Controller");
       return next(err);
     }
   }

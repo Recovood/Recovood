@@ -139,7 +139,7 @@ const resolvers = {
         console.log(args, "<<<<< args in sendDistances");
         const restaurantNearbies = []
         for (let i = 0; i < data.length; i++) {
-          let distance = getDistanceFromLatLonInKm(args.latLong.latitude, args.latLong.longitude, data[i].Restaurant.longitude, data[i].Restaurant.latitude);
+          let distance = getDistanceFromLatLonInKm(args.latLong.latitude, args.latLong.longitude, data[i].Restaurant.latitude, data[i].Restaurant.longitude);
           // DISINI BISA GANTI JARAK
           if (distance < 5) {
             restaurantNearbies.push(data[i]);

@@ -42,19 +42,22 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
   });
 
   const handleAddCart = async() => {
-    const newItem = {
-      quantity: +quantity,
-      status: "Waiting for Checkout",
-      FoodId: +item.id
-    }
-    console.log(newItem, "<<<<< ini dia")
+    console.log("<<<<<<<<<<<<< masukk gan");
     try {
+      const newItem = {
+        quantity: +quantity,
+        status: "Waiting for Checkout",
+        FoodId: +item.id
+      }
+      console.log(newItem, "<<<<< ini dia")
       await addToCart({
         variables: {
           newCart: newItem
         }
       })
-      setCartStatus("Pending")
+      // setCartStatus("Pending")
+      console.log("<<<<<<<<<<<<<<<<< sebelum masuk ke cart")
+      navigation.navigate("Cart", { menuName: "Waiting for Checkout" });
     } catch(err) {
       console.log(JSON.stringify(err), "<<<<<< kena ini");
     }
