@@ -1,43 +1,53 @@
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, makeVar, gql } from '@apollo/client';
 
-// const httpLink = createHttpLink({
-//   credentials: "same-origin",
-// });
 
-// const authLink = setContext ((_, { headers }) => {
-//   // get the authentication token from local storage if it exists
-//   const token = localStorage.getItem('token');
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ" ? `Bearer ${token}` : "",    // change token with localStorage.access_token for dynamic
-//     }
-//   }
-// });
+export const userToken = makeVar(null);
 
-// const setAuthorizationLink = setContext((request, previousContext) => ({
-//   headers: {access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ"}
-// }));
+export const GET_USER_TOKEN = gql`
+  query {
+    userToken @client
+  }
+`;
 
-// const auth = new ApolloLink((operation, forward) => {
-//   const access_token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjAyOTI5NDU4fQ.Wx1VBiiNXbR7MzXyYwtxsdAS5CNgrO-slEcRW3qbfhQ" 
+export const getUsername = makeVar("");
 
-//   operation.setContext({
-//     headers: {
-//       access_token
-//     }
-//   })
+export const GET_USERNAME = gql`
+  query {
+    getUsername @client
+  }
+`;
 
-//   return forward(operation)
+export const getEmail = makeVar("");
 
-// })
+export const GET_EMAIL = gql`
+  query {
+    getEmail @client
+  }
+`;
 
 const client = new ApolloClient({
   uri: "http://192.168.0.23:4000/",
-  cache: new InMemoryCache(),
-  // link: auth
+  cache: new InMemoryCache({ typePolicies: {
+    Query: {
+      fields: {
+        userToken: {
+          read() {
+            return userToken()
+          }
+        },
+        getUsername: {
+          read() {
+            return getUsername()
+          }
+        },
+        getEmail: {
+          read() {
+            return getEmail()
+          }
+        }
+      }
+    }
+  } }),
 });
 
 export default client

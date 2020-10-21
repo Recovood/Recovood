@@ -26,6 +26,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      TransactionId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Transactions",
+          key: "id"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       quantity: {
         type: Sequelize.INTEGER
       },

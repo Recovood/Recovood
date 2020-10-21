@@ -11,9 +11,12 @@ import {
 } from "react-native";
 import PopupDetail from "../components/PopupDetail";
 
+
 function FoodDetails(props) {
 
   const [isPress, setIsPress] = useState(false);
+
+
 
   return (
     <View style={{ height: "100%" }}>
@@ -56,7 +59,7 @@ function FoodDetails(props) {
             source={require("../assets/location.png")} />
           <Text>{props.route.params.Restaurant.address}</Text>
         </View>
-        <Text style={{ fontWeight: "bold", fontSize: 20, color: "#5DB075", marginTop: 30 }}>Ingredients</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 20, color: "#5DB075", marginTop: 30 }}>Descriptions</Text>
         <Text style={{ color: "#404040", marginTop: 10 }}>{props.route.params.ingredient}</Text>
 
         <PopupDetail 

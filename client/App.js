@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { Cart, Login, FoodList, FoodDetails } from "./screens/index";
+import { Cart, Login, FoodList, FoodDetails, SignUp } from "./screens/index";
 import { ApolloProvider } from "@apollo/client";
 import client from "./configs/apollo";
 import PaymentPage from "./screens/PaymentPage";

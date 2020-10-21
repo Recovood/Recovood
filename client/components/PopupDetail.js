@@ -2,13 +2,63 @@ import { useState } from "react"
 import { Button, Text, View, StyleSheet, Dimensions, TextInput, TouchableHighlight, Pressable, Image, TouchableOpacity } from "react-native"
 import Modal from 'react-native-modal'
 import React from 'react'
+import { gql, useQuery, useMutation } from "@apollo/client";
+
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+import { GET_ALL_CARTS } from "../screens/Cart";
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
 
+const ADD_CART = gql`
+  mutation addCart($newCart: cartInput) {
+    addCart(newCart: $newCart){
+      id
+      status
+      quantity
+      UserId
+      FoodId
+    }
+  }
+`;
+
 export default function PopupDetail({ isPress, setFalse= () => {}, address, price, navigation, item }) {
   
   const [ quantity, setQuantity ] = useState(1);
+
+  const [ addToCart, { data } ] = useMutation(ADD_CART, {
+    context: {
+      headers: {
+        access_token: userToken()
+      }
+    },
+    refetchQueries: [{ query: GET_ALL_CARTS,
+      context: {
+        headers: {
+          access_token: userToken()
+        }
+      }
+    }]
+  });
+
+  const handleAddCart = async() => {
+    const newItem = {
+      quantity: +quantity,
+      status: "Waiting for Checkout",
+      FoodId: +item.id
+    }
+    console.log(newItem, "<<<<< ini dia")
+    try {
+      await addToCart({
+        variables: {
+          newCart: newItem
+        }
+      })
+      setCartStatus("Pending")
+    } catch(err) {
+      console.log(JSON.stringify(err), "<<<<<< kena ini");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -50,7 +100,10 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
             <Text>Rp{parseInt(price) * quantity}</Text>
           </View>
           <View style={styles.line}></View>
-          <Pressable style={styles.reserveButton} onPress={() => { setFalse(), navigation.navigate("Cart", item={item: item, totalPrice: parseInt(price) * quantity}) }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
+          <Pressable style={styles.reserveButton}
+            onPress={() => { setFalse(), 
+            handleAddCart()
+          }}><Text style={styles.reserveText}>Reserve Now</Text></Pressable>
 
         </View>
       </Modal>
@@ -102,7 +155,8 @@ const styles = StyleSheet.create({
     minHeight: windowHeight / 3,
     // borderRadius: 16px 16px 0px 0px;
     padding: 24,
-    borderRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     justifyContent: "space-evenly",
 
     // width: windowWidth/2,

@@ -1,12 +1,15 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Restaurants', {
+    await queryInterface.createTable('Transactions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      transactionId: {
+        type: Sequelize.STRING
       },
       UserId: {
         type: Sequelize.INTEGER,
@@ -17,20 +20,17 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
+      orderId: {
         type: Sequelize.STRING
       },
-      address: {
+      totalAmount: {
         type: Sequelize.STRING
       },
-      image_url: {
+      paymentType: {
         type: Sequelize.STRING
       },
-      longitude: {
-        type: Sequelize.DECIMAL
-      },
-      latitude: {
-        type: Sequelize.DECIMAL
+      transactionStatus: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +43,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Restaurants');
+    await queryInterface.dropTable('Transactions');
   }
 };
