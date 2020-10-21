@@ -1,6 +1,6 @@
 const { gql, UserInputError, AuthenticationError } = require("apollo-server");
 const { default: Axios } = require("axios");
-const urlCart = "http://58080da2af56.ngrok.io"
+const urlCart = "https://7932ea0592d8.ngrok.io"
 
 const typeDefs = gql`
   type Cart{
@@ -48,6 +48,7 @@ const typeDefs = gql`
     updateCartQuantity(id: ID, newCart: cartInput): Cart,
     deleteCart(id: ID): MessageCart
     paymentBank(paymentInfo: paymentBankInput): paymentBankResponse
+    updateCartStatusToDone(id: ID): MessageCart
   }
 
   input paymentBankInput{
@@ -209,6 +210,34 @@ const resolvers = {
           data: {
             quantity,
           }
+        })
+
+        return data
+      } catch (error) {
+        if (error === "auth error") {
+          throw new AuthenticationError("must be authenticated")
+        } else if (error.statusCode === 400) {
+          console.log(error);
+          throw new UserInputError(error.response.data.errors[0], error.statusCode)
+        } else {
+          return error
+        }
+      }
+    },
+    updateCartStatusToDone: async (_, args, context) => {
+      try {
+        if (context.user === undefined) {
+          throw ("auth error")
+        }
+        let id = args.id
+        let UserId = context.user.id
+        // console.log(args);
+        let { data } = await Axios({
+          method: "PATCH",
+          url: `${urlCart}/done/${id}`,
+          headers: {
+            user_id: +UserId
+          },
         })
 
         return data

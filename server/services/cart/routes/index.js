@@ -11,6 +11,7 @@ router.get("/carts", CartController.getCarts);
 router.patch("/carts/:id", CartController.updateQuantity);
 router.delete("/carts/:id", CartController.deleteCart);
 router.patch("/checkout", CartController.checkout);
+router.patch("/done/:id", CartController.cartDone)
 router.post("/midtrans", CartController.midtrans);
 router.get(
   "/midtrans/:midtransTrxId",

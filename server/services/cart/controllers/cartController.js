@@ -11,13 +11,14 @@ class CartController {
     try {
       const UserId = req.headers.user_id;
       const { FoodId, quantity, status } = req.body;
+      // console.log(quantity, ">>>>> quantitynya");
+
 
       let cartFromDb = await Cart.findOne({
         where: { UserId, FoodId, status: "Waiting for Checkout" },
         include: [Food],
       }); // Add include: Food | if Food model completed
-      console.log(cartFromDb.quantity, ">>>>> cartfromdb");
-      console.log(quantity, ">>>>> quantitynya");
+      // console.log(cartFromDb.quantity, ">>>>> cartfromdb");
       if (cartFromDb) {
         let totalQuantity = Number(quantity) + Number(cartFromDb.quantity);
         console.log(totalQuantity, ">>>>>> totalqty");
@@ -52,6 +53,7 @@ class CartController {
           };
           throw err;
         }
+        console.log(quantity, "safasdf")
         const newCart = await Cart.create({ UserId, FoodId, quantity, status });
         return res.status(201).json({
           id: newCart.id,
@@ -133,6 +135,27 @@ class CartController {
     }
   }
 
+  static async cartDone(req, res, next){
+    try {
+      console.log("masuk ke cartDone service")
+      const id = req.params.id
+      const UserId = req.headers.user_id
+      console.log(id, UserId, "Darii CartDone")
+      const cart = await Cart.findOne({where: {id,UserId,  status: "Paid"}})
+      if(!cart){
+        let err = {
+          statusCode: 404,
+          message: "Cart not found"
+        }
+        throw err
+      }
+      await Cart.update({status:"Done"}, {where: {id: cart.id}})
+      res.status(200).json({message: "Success updating cart"})
+    } catch (error) {
+      next(error)
+    }
+      
+  }
   static async midtrans(req, res, next) {
     try {
       console.log(req.body, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
@@ -398,8 +421,8 @@ class CartController {
             totalPrice: response.gross_amount,
             paymentType: response.payment_type,
             transactionStatus: response.transaction_status,
-            vaNumber: response.va_numbers[0].va_number,
-            bank: response.va_numbers[0].bank,
+            // vaNumber: response.va_numbers[0].va_number || response.permata_va_number,
+            // bank: response.va_numbers[0].bank || null,
           });
         });
     } catch (error) {

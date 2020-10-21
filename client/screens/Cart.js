@@ -15,6 +15,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import PayModal from "../components/PayModal";
 import { Dropdown } from "react-native-material-dropdown-v2";
 import TrxModal from "../components/TrxModal";
+import ConfirmModal from "../components/ConfirmModal"
 import {Picker} from '@react-native-community/picker';
 
 import { userToken, GET_USER_TOKEN } from "../configs/apollo";
@@ -70,6 +71,8 @@ function Cart(props) {
   const [midtransTrxId, setMidtransTrxId] = useState();
   const [cartStatus, setCartStatus] = useState("Waiting for Checkout");
   const [totalPrice, setTotalPrice] = useState(0);
+  const [pressedCart, setPressedCart] = useState()
+  console.log(pressedCart, "ini pressedddd cartttt")
   const { data, loading, error, refetch: getCarts } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
@@ -127,7 +130,12 @@ function Cart(props) {
 
   const renderItemCarts = ({ item }) => {
     return (
-      <View style={{ flex: 1 }}>
+      <TouchableOpacity style={{ flex: 1 }} 
+        onPress={()=> {
+          setPressedCart(item)
+          setIsPress(true)
+      }}
+      >
         <Image
           style={{ height: 150, width: 150, borderRadius: 20 }}
           source={{
@@ -177,17 +185,13 @@ function Cart(props) {
             Rp{item.quantity * item.Food.price}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const renderItemTrx = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => {
-          setIsTrxPress(true);
-          setMidtransTrxId(item.transactionId);
-        }}
         style={{ justifyContent: "space-between", alignItems: "flex-start" }}
       >
         <Image
@@ -268,6 +272,7 @@ function Cart(props) {
         height: 2,
         backgroundColor: "#D3D3D3",
         marginHorizontal: 50,
+        marginBottom: 2,
         alignSelf: "center"
        }}></View>
 
@@ -344,6 +349,13 @@ function Cart(props) {
             midtransTrxId={midtransTrxId}
           />
         )}
+        
+          
+        <ConfirmModal
+          isPress={isPress && cartStatus === "Paid"}
+          setIsPress={setIsPress}
+          cart={pressedCart}
+        />
       </View>
     </View>
   );
