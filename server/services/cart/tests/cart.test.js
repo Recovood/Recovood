@@ -30,7 +30,7 @@ beforeAll(async (done) => {
     image_url:
       "https://travel.tribunnews.com/2020/02/24/4-fakta-unik-rumah-makan-padang-ada-lagu-berjudul-nasi-padang",
     price: 18000,
-    stock: 10,
+    stock: 20,
     ingredient: "nasi dicampur dengan kaldu ditambah dengan ayam",
     RestaurantId: restaurants.id,
   });
@@ -46,11 +46,17 @@ afterAll((done) => {
 describe("MODEL Cart", () => {
   describe("POST /carts", () => {
     test("Success Create Cart", (done) => {
+      // console.log(food, ">>>>>> food id nya");
+      // console.log(user, ">>>>>> user id nya");
       request(app)
         .post("/carts")
         .send({
           FoodId: food.id,
+<<<<<<< HEAD
           quantity: 20,
+=======
+          quantity: 1,
+>>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
@@ -64,8 +70,40 @@ describe("MODEL Cart", () => {
           // expect(response).toHaveProperty("body", expect.any(Object));
           expect(body).toHaveProperty("id");
           expect(body).toHaveProperty("FoodId", food.id);
+<<<<<<< HEAD
           expect(body).toHaveProperty("quantity", 20);
           expect(body).toHaveProperty("status", "Waiting for Payment");
+=======
+          expect(body).toHaveProperty("quantity", 1);
+          expect(body).toHaveProperty("status", "Waiting for Payment");
+          done();
+        });
+    });
+
+    test("Success Create Cart double", (done) => {
+      // console.log(food, ">>>>>> food id nya");
+      // console.log(user, ">>>>>> user id nya");
+      request(app)
+        .post("/carts")
+        .send({
+          FoodId: food.id,
+          quantity: 1,
+          status: "Waiting for Checkout",
+        })
+        .set("Accept", "application/json")
+        .set("user_id", user.id)
+        .expect("Content-Type", /json/)
+        .then((response) => {
+          const { body, status } = response;
+          idOfCart = body.id;
+          // idOfFood = body.FoodId;
+          expect(status).toBe(201);
+          // expect(response).toHaveProperty("body", expect.any(Object));
+          expect(body).toHaveProperty("id");
+          expect(body).toHaveProperty("FoodId", food.id);
+          expect(body).toHaveProperty("quantity", 2);
+          expect(body).toHaveProperty("status", "Waiting for Checkout");
+>>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           done();
         });
     });
@@ -183,7 +221,11 @@ describe("MODEL Cart", () => {
           expect(body).toHaveProperty("UserId");
           expect(body).toHaveProperty("FoodId", food.id);
           expect(body).toHaveProperty("quantity", 1);
+<<<<<<< HEAD
           expect(body).toHaveProperty("status", "Waiting for Payment");
+=======
+          expect(body).toHaveProperty("status", "Waiting for Checkout");
+>>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           done();
         });
     });
