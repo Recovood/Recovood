@@ -3,6 +3,7 @@ const { Food, Restaurant } = require("../models");
 class FoodController {
   static async addFood(req, res, next) {
     try {
+      console.log(req.body, ">>>> body req");
       const {
         name,
         image_url,
@@ -21,14 +22,14 @@ class FoodController {
       });
       return res.status(201).json(food);
     } catch (err) {
-      // console.log(err, "<<<< error in addFood Food Controller");
+      console.log(err, "<<<< error in addFood Food Controller");
       return next(err);
     }
   }
 
   static async getFoods(req, res, next) {
     try {
-      const foods = await Food.findAll({ include: [ Restaurant ] });
+      const foods = await Food.findAll({ include: [Restaurant] });
       return res.status(200).json(foods);
     } catch (err) {
       // console.log(err, "<<<< error in getFoods Food Controller");

@@ -12,6 +12,8 @@ beforeAll(async (done) => {
     name: "Ayam Bu Vesti",
     address: "Jl. Pangeran Antasari, No.11",
     image_url: "www.image.com",
+    longitude: -7.66519,
+    latitude: 111.31629,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -51,13 +53,15 @@ afterAll((done) => {
 
 describe("Model Restaurant", () => {
   test("Successfully add product to database", (done) => {
-    console.log(user, "<<<<<<<<<<<<<<<<<<<<<<< user");
+    // console.log(user, "<<<<<<<<<<<<<<<<<<<<<<< user");
     request(app)
       .post("/restaurants")
       .send({
         name: "Ayam Bu Vesti",
         address: "Jl. Pangeran Antasari, No.11",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .set("user_id", user.id)
@@ -71,6 +75,8 @@ describe("Model Restaurant", () => {
         expect(body).toHaveProperty("name", "Ayam Bu Vesti");
         expect(body).toHaveProperty("address", "Jl. Pangeran Antasari, No.11");
         expect(body).toHaveProperty("image_url", "www.image.com");
+        expect(body).toHaveProperty("longitude", "-7.66519");
+        expect(body).toHaveProperty("latitude", "111.31629");
         done();
       })
       .catch((err) => {
@@ -106,6 +112,8 @@ describe("Model Restaurant", () => {
         expect(body).toHaveProperty("name", "Ayam Bu Vesti");
         expect(body).toHaveProperty("address", "Jl. Pangeran Antasari, No.11");
         expect(body).toHaveProperty("image_url", "www.image.com");
+        expect(body).toHaveProperty("longitude", "-7.66519");
+        expect(body).toHaveProperty("latitude", "111.31629");
         done();
       })
       .catch((err) => {
@@ -120,6 +128,8 @@ describe("Model Restaurant", () => {
         name: "Ayam Bu Vesti",
         address: "Jl. Pangeran Antasari, No.12",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .then((res) => {
@@ -129,6 +139,8 @@ describe("Model Restaurant", () => {
         expect(body).toHaveProperty("name", "Ayam Bu Vesti");
         expect(body).toHaveProperty("address", "Jl. Pangeran Antasari, No.12");
         expect(body).toHaveProperty("image_url", "www.image.com");
+        expect(body).toHaveProperty("longitude", "-7.66519");
+        expect(body).toHaveProperty("latitude", "111.31629");
         done();
       });
   });
@@ -158,6 +170,8 @@ describe("Model Restaurant", () => {
         name: "",
         address: "Jl. Pangeran Antasari, No.11",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
@@ -177,6 +191,8 @@ describe("Model Restaurant", () => {
         name: "Ayam Bu Vesti",
         address: "",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
@@ -196,6 +212,8 @@ describe("Model Restaurant", () => {
         name: "Ayam Bu Vesti",
         address: "Jl. Pangeran Antasari, No.11",
         image_url: "image",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
@@ -231,6 +249,8 @@ describe("Model Restaurant", () => {
         name: "",
         address: "Jl. Pangeran Antasari, No.12",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .then((res) => {
@@ -249,6 +269,8 @@ describe("Model Restaurant", () => {
         name: "Ayam Bu Vesti",
         address: "",
         image_url: "www.image.com",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .then((res) => {
@@ -267,6 +289,8 @@ describe("Model Restaurant", () => {
         name: "Ayam Bu Vesti",
         address: "Jl. Pangeran Antasari, No.11",
         image_url: "image",
+        longitude: -7.66519,
+        latitude: 111.31629,
       })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)

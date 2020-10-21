@@ -12,8 +12,6 @@ class CartController {
         include: [Food],
       }); // Add include: Food | if Food model completed
 
-      console.log(cartFromDb, ">>>> cart from db");
-
       if (cartFromDb) {
         let totalQuantity = +quantity + +cartFromDb.quantity;
 
@@ -74,13 +72,14 @@ class CartController {
         { quantity },
         { where: { id, UserId }, returning: true }
       );
-      if (!data) {
+      if (!data[0]) {
         let err = {
           statusCode: 404,
           message: "Cart not found",
         };
         next(err);
       }
+      console.log(data, ">>>> data from cartController");
       let cartAfterUpdate = data[1][0].dataValues;
       return res.status(200).json({
         id: cartAfterUpdate.id,

@@ -1,7 +1,6 @@
 const { User } = require("../models");
 const { generateToken, verifyToken } = require("../helpers/jwt");
 const { checkPassword } = require("../helpers/bcrypt");
-const { OAuth2Client } = require("google-auth-library");
 
 class UserController {
   static async showHome(req, res, next) {
@@ -87,47 +86,6 @@ class UserController {
       }
     } catch (err) {
       // console.log(err, "<<<< error in login UserController");
-      return next(err);
-    }
-  }
-
-  static async googleLogin(req, res, next) {
-    const client = new OAuth2Client(process.env.CLIENT_ID);
-    const { google_access_token } = req.headers;
-    try {
-      const ticket = await client.verifyIdToken({
-        idToken: google_access_token,
-        audience: process.env.CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      console.log(payload);
-      const getUserName = payload.name;
-      const google_email = payload.email;
-      const profile_picture = payload.picture;
-      const user = await User.findOne({
-        where: {
-          email: payload.email,
-        },
-      });
-      if (!user) {
-        const userObj = {
-          username: getUserName,
-          email: payload.email,
-          password: "fullstack",
-        };
-        const addUser = await User.create(userObj);
-        const access_token = generateToken(addUser);
-        return res
-          .status(200)
-          .json({ access_token, avatar: profile_picture, email: google_email });
-      } else {
-        const access_token = generateToken(user);
-        return res
-          .status(200)
-          .json({ access_token, avatar: profile_picture, email: google_email });
-      }
-    } catch (err) {
-      // console.log(err, "<<<< error in googleLogin UserController");
       return next(err);
     }
   }

@@ -41,12 +41,10 @@ describe("User Endpoints Tests", () => {
     "Role cannot be left blank!",
   ];
 
-  describe("Get show home", () => {
+  describe("GET show home", () => {
     test("200: Success show home", (done) => {
       request(app)
         .get("/")
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .then((response) => {
           const { body, status } = response;
           expect(status).toBe(200);
@@ -297,11 +295,4 @@ describe("User Endpoints Tests", () => {
         });
     });
   });
-
-  // describe('POST /googleLogin', () => {
-  //   test('200: Success login with google login', (done) => {
-
-  //   })
-
-  // })
 });
