@@ -51,7 +51,7 @@ describe("MODEL Cart", () => {
         .send({
           FoodId: food.id,
           quantity: 20,
-          status: "waiting for payment",
+          status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
         .set("user_id", user.id)
@@ -65,7 +65,7 @@ describe("MODEL Cart", () => {
           expect(body).toHaveProperty("id");
           expect(body).toHaveProperty("FoodId", food.id);
           expect(body).toHaveProperty("quantity", 20);
-          expect(body).toHaveProperty("status", "waiting for payment");
+          expect(body).toHaveProperty("status", "Waiting for Payment");
           done();
         });
     });
@@ -74,9 +74,9 @@ describe("MODEL Cart", () => {
       request(app)
         .post("/carts")
         .send({
-          FoodId: 1,
+          FoodId: food.id,
           quantity: "",
-          status: "waiting for payment",
+          status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
         .set("user_id", user.id)
@@ -94,9 +94,9 @@ describe("MODEL Cart", () => {
       request(app)
         .post("/carts")
         .send({
-          FoodId: 1,
+          FoodId: food.id,
           quantity: -10,
-          status: "waiting for payment",
+          status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
         .set("user_id", user.id)
@@ -119,7 +119,7 @@ describe("MODEL Cart", () => {
         .send({
           FoodId: food.id,
           quantity: 100,
-          status: "waiting for payment",
+          status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
         .set("user_id", user.id)
@@ -183,7 +183,7 @@ describe("MODEL Cart", () => {
           expect(body).toHaveProperty("UserId");
           expect(body).toHaveProperty("FoodId", food.id);
           expect(body).toHaveProperty("quantity", 1);
-          expect(body).toHaveProperty("status", "waiting for payment");
+          expect(body).toHaveProperty("status", "Waiting for Payment");
           done();
         });
     });

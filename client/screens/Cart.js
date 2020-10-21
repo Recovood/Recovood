@@ -15,6 +15,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import PayModal from "../components/PayModal";
 import { Dropdown } from "react-native-material-dropdown-v2";
 import TrxModal from "../components/TrxModal";
+import {Picker} from '@react-native-community/picker';
 
 import { userToken, GET_USER_TOKEN } from "../configs/apollo";
 
@@ -99,7 +100,7 @@ function Cart(props) {
         (cart) => cart.status === "Waiting for Checkout"
       );
       console.log(countedCarts);
-      let totalPriceTemp = totalPrice;
+      let totalPriceTemp = 0;
       countedCarts.forEach((cart) => {
         console.log(cart.Food.price, cart.quantity, "<<< price");
         totalPriceTemp = +totalPriceTemp + +cart.Food.price * +cart.quantity;
@@ -244,13 +245,32 @@ function Cart(props) {
         paddingHorizontal: 25,
       }}
     >
-      <Dropdown
+      {/* <Dropdown
         data={cartStatusOption}
         onChangeText={(text) => changeLabelHandler(text)}
-        itemCount={3}
-        dropdownPosition={-4}
+        // itemCount={3}
+        // dropdownPosition={-4}
         value={cartStatus}
-      />
+      /> */}
+
+      <Picker
+        selectedValue={cartStatus}
+        onValueChange={(text) => changeLabelHandler(text)}
+        mode="dropdown"
+      >
+        <Picker.Item label="Waiting for Checkout" value="Waiting for Checkout" />
+        <Picker.Item label="Pending" value="Pending" />
+        <Picker.Item label="Paid" value="Paid" />
+        <Picker.Item label="Done" value="Done" />
+      </Picker>
+      <View style={{ 
+        width: 345,
+        height: 2,
+        backgroundColor: "#D3D3D3",
+        marginHorizontal: 50,
+        alignSelf: "center"
+       }}></View>
+
       {cartStatus !== "Pending" ? (
         <FlatList
           refreshing={loading}

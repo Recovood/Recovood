@@ -8,7 +8,6 @@ class RestaurantController {
       const { name, address, image_url, longitude, latitude } = req.body;
       // console.log(UserId);
       // const UserId = 1 // for testing purposes
-      const { name, address, image_url, longitude, latitude } = req.body;
       console.log(UserId);
       const restaurant = await Restaurant.create({
         UserId: UserId,

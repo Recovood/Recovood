@@ -52,13 +52,6 @@ function DetailsNavigator() {
 
   return (
     <Stack.Navigator headerMode="none">
-<<<<<<< HEAD
-      <Stack.Screen name="Cart" component={Cart} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Home" component={Navigator} />
-      <Stack.Screen name="FoodDetails" component={FoodDetails} />
-      <Stack.Screen name="Payment" component={PaymentPage}/>
-=======
       {
         isLoggedIn.userToken ? (
           <>     
@@ -74,7 +67,6 @@ function DetailsNavigator() {
           </>
         )
       }
->>>>>>> origin/navigation-guard
     </Stack.Navigator>
   )
 }
