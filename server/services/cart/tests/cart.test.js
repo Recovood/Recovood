@@ -52,11 +52,7 @@ describe("MODEL Cart", () => {
         .post("/carts")
         .send({
           FoodId: food.id,
-<<<<<<< HEAD
-          quantity: 20,
-=======
           quantity: 1,
->>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           status: "Waiting for Payment",
         })
         .set("Accept", "application/json")
@@ -70,10 +66,6 @@ describe("MODEL Cart", () => {
           // expect(response).toHaveProperty("body", expect.any(Object));
           expect(body).toHaveProperty("id");
           expect(body).toHaveProperty("FoodId", food.id);
-<<<<<<< HEAD
-          expect(body).toHaveProperty("quantity", 20);
-          expect(body).toHaveProperty("status", "Waiting for Payment");
-=======
           expect(body).toHaveProperty("quantity", 1);
           expect(body).toHaveProperty("status", "Waiting for Payment");
           done();
@@ -103,7 +95,6 @@ describe("MODEL Cart", () => {
           expect(body).toHaveProperty("FoodId", food.id);
           expect(body).toHaveProperty("quantity", 2);
           expect(body).toHaveProperty("status", "Waiting for Checkout");
->>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           done();
         });
     });
@@ -221,11 +212,7 @@ describe("MODEL Cart", () => {
           expect(body).toHaveProperty("UserId");
           expect(body).toHaveProperty("FoodId", food.id);
           expect(body).toHaveProperty("quantity", 1);
-<<<<<<< HEAD
-          expect(body).toHaveProperty("status", "Waiting for Payment");
-=======
           expect(body).toHaveProperty("status", "Waiting for Checkout");
->>>>>>> 4489cae013f66507bf2f6c7992c1dddce98bcae1
           done();
         });
     });
