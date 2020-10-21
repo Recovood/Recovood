@@ -16,9 +16,11 @@ class CartController {
         where: { UserId, FoodId, status: "Waiting for Checkout" },
         include: [Food],
       }); // Add include: Food | if Food model completed
-
+      console.log(cartFromDb.quantity, ">>>>> cartfromdb");
+      console.log(quantity, ">>>>> quantitynya");
       if (cartFromDb) {
-        let totalQuantity = +quantity + +cartFromDb.quantity;
+        let totalQuantity = Number(quantity) + Number(cartFromDb.quantity);
+        console.log(totalQuantity, ">>>>>> totalqty");
 
         if (totalQuantity > cartFromDb.Food.stock) {
           let err = {
@@ -233,12 +235,9 @@ class CartController {
           }
         })
         .then(() => {
-          res
-            .status(200)
-            .json({
-              message:
-                "your transaction succesfully placed, waiting for payment",
-            });
+          res.status(200).json({
+            message: "your transaction succesfully placed, waiting for payment",
+          });
         })
         .catch((e) => {
           console.log(e);

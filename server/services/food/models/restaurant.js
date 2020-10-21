@@ -38,29 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       longitude: DataTypes.DECIMAL,
       latitude: DataTypes.DECIMAL,
     },
-<<<<<<< HEAD
-    address: {
-      type: DataTypes.STRING,
-      validate:{
-        notEmpty: {
-          args: true,
-          msg: "address required"
-        }
-      }
-    },
-    image_url: DataTypes.STRING,
-    longitude: DataTypes.DECIMAL,
-    latitude: DataTypes.DECIMAL
-  }, {
-    sequelize,
-    modelName: 'Restaurant',
-  });
-=======
     {
       sequelize,
       modelName: "Restaurant",
     }
   );
->>>>>>> UpdateTesting
   return Restaurant;
 };
