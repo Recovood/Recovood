@@ -17,6 +17,8 @@ import React from "react";
 import { gql, useQuery } from "@apollo/client";
 
 import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get("window").width
 
 const GET_TRX_INFO = gql`
   query getMidtransTransaction($midtransTrxId: String) {
@@ -62,8 +64,9 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
 
   console.log(error, "<<<<<<<< ini error");
   return (
-    <View style={{ backgroundColor: "white", flex: 1 }}>
+    <View style={{ display: "flex",alignContent:"flex-end", justifyContent: "flex-end",flex: 1 }}>
       <Modal
+        style={styles.modal}
         isVisible={isTrxPress}
         animationIn="slideInUp"
         animationOut={"slideOutDown"}
@@ -81,6 +84,7 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
           <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
         ) : (
           <View>
+            <Text>Complete your Transaction</Text>
             <Text>VA Number {data.getMidtransTransaction.vaNumber}</Text>
             <Text>Payment Type {data.getMidtransTransaction.paymentType}</Text>
             <Text>Bank {data.getMidtransTransaction.bank}</Text>
@@ -94,15 +98,14 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
 const styles = StyleSheet.create({
   modal: {
     backgroundColor: "white",
-    marginVertical: 100,
-    borderRadius: 40,
-
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-
     flex: 1,
+    margin: 0,
+    marginTop: windowHeight/2
   },
 });
