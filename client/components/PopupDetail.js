@@ -5,6 +5,7 @@ import React from 'react'
 import { gql, useQuery, useMutation } from "@apollo/client";
 
 import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+import { GET_ALL_CARTS } from "../screens/Cart";
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -30,15 +31,21 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
       headers: {
         access_token: userToken()
       }
-    }
+    },
+    refetchQueries: [{ query: GET_ALL_CARTS,
+      context: {
+        headers: {
+          access_token: userToken()
+        }
+      }
+    }]
   });
 
-  console.log(userToken(), "<<<< token");
   const handleAddCart = async() => {
     const newItem = {
-      quantity: quantity,
+      quantity: +quantity,
       status: "Waiting for Checkout",
-      FoodId: item.id
+      FoodId: +item.id
     }
     console.log(newItem, "<<<<< ini dia")
     try {
@@ -47,9 +54,9 @@ export default function PopupDetail({ isPress, setFalse= () => {}, address, pric
           newCart: newItem
         }
       })
-      navigation.navigate("Home");
+      navigation.navigate("Cart");
     } catch(err) {
-      console.log(err, "<<<<<< kena ini");
+      console.log(JSON.stringify(err), "<<<<<< kena ini");
     }
   }
 

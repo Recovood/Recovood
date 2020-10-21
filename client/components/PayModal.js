@@ -3,7 +3,9 @@ import { ActivityIndicator, Image, View, StyleSheet, FlatList, ScrollView, Text,
 import React, { useState } from "react"
 import Modal from 'react-native-modal'
 import { gql, useMutation } from "@apollo/client"
-import { GET_ALL_CARTS } from "../screens/Cart"
+import { GET_ALL_CARTS, GET_ALL_TRANSACTION } from "../screens/Cart"
+
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -40,13 +42,19 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
+        access_token: userToken()
       }
     },
     refetchQueries: [{
       query: GET_ALL_CARTS, context: {
         headers: {
-          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
+          access_token: userToken()
+        }
+      }
+    }, {
+      query: GET_ALL_TRANSACTION, context: {
+        headers: {
+          access_token: userToken()
         }
       }
     }]
@@ -58,8 +66,9 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
     let totalPrice = 0
     checkoutCarts.forEach(cart => {
       orderId = orderId + cart.id
-      orderId = orderId + Date.now()
     })
+    orderId = orderId + Date.now()
+    console.log(orderId.length);
     checkoutCarts.forEach(cart => {
       totalPrice = +totalPrice + (+cart.Food.price * +cart.quantity)
     })
@@ -72,6 +81,7 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts }) {
         totalPrice
       }
     })
+    setIsPress();
   }
   if (LoadingPayment) {
     return (

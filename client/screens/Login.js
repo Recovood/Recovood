@@ -26,8 +26,8 @@ export default function Login(props) {
     setVisibility(!visibility)
   }
 
-  const [ email, setEmail ] = useState("");
-  const [ password, setPassword ] = useState("");
+  const [ email, setEmail ] = useState("merchika@mail.com");
+  const [ password, setPassword ] = useState("chikachika");
 
   const [ userLogin, { data } ] = useMutation(USER_LOGIN);
 
@@ -72,7 +72,7 @@ export default function Login(props) {
     >
       <SafeAreaView style={styles.container}>
         <ImageBackground source={Background} style={styles.image}> 
-        <View style={{ backgroundColor: "#19e680", borderRadius: 10, opacity: 0.9, marginHorizontal: 20 }}>
+        <View>
           <Text style={styles.title}>RECOVOOD</Text>
         </View>
         <View style={{ marginHorizontal: 20 }}>
@@ -125,7 +125,7 @@ const styles = StyleSheet.create( {
   },
   title:{
     fontSize: 50,
-    color: "#376444",
+    color: "#FFF",
     textAlign: "center",
     fontWeight: "bold"
   },

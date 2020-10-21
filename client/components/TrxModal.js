@@ -16,6 +16,8 @@ import Modal from "react-native-modal";
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+
 const GET_TRX_INFO = gql`
   query getMidtransTransaction($midtransTrxId: String) {
     getMidtransTransaction(midtransTrxId: $midtransTrxId) {
@@ -33,17 +35,20 @@ const GET_TRX_INFO = gql`
 `;
 
 export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
+  console.log(midtransTrxId, "<<<<< midrant")
   const { data, loading, error } = useQuery(GET_TRX_INFO, {
     variables: {
-      midtransTrxId,
+      midtransTrxId: "1f78975e-664c-4e7d-bfcd-981b4081552f"
     },
     context: {
       headers: {
         access_token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo",
+          userToken(),
       },
     },
   });
+
+  console.log(loading, error, data, "<<<< ini loading error data");
 
   if (loading) {
     return (
@@ -72,7 +77,9 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
           <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
         ) : (
           <View>
-            <Text>{data.id}</Text>
+            <Text>VA Number {data.getMidtransTransaction.vaNumber}</Text>
+            <Text>Payment Type {data.getMidtransTransaction.paymentType}</Text>
+            <Text>Bank {data.getMidtransTransaction.bank}</Text>
           </View>
         )}
       </Modal>

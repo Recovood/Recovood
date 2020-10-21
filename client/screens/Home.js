@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from "react-native";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import * as Location from "expo-location";
 
 const GET_ALL_FOODS = gql`
@@ -33,30 +33,53 @@ const GET_ALL_FOODS = gql`
   }
 `;
 
-function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  var d = R * c; // Distance in km
-  return d;
-}
+const SEND_DISTANCE = gql`
+  mutation sendDistances($latLong: inputDistances) {
+    sendDistances(latLong: $latLong) {
+      id
+      name
+      image_url
+      price
+      stock
+      ingredient
+      Restaurant {
+        id
+        name
+        address
+        image_url
+        longitude
+        latitude
+      }
+    }
+  }
+`;
 
-function deg2rad(deg) {
-  return deg * (Math.PI/180)
-}
+// function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+//   var R = 6371; // Radius of the earth in km
+//   var dLat = deg2rad(lat2-lat1);  // deg2rad below
+//   var dLon = deg2rad(lon2-lon1); 
+//   var a = 
+//     Math.sin(dLat/2) * Math.sin(dLat/2) +
+//     Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+//     Math.sin(dLon/2) * Math.sin(dLon/2)
+//     ; 
+//   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+//   var d = R * c; // Distance in km
+//   return d;
+// }
+
+// function deg2rad(deg) {
+//   return deg * (Math.PI/180)
+// }
 
 function HomeScreen(props) {
   
-  const { loading, error, data } = useQuery(GET_ALL_FOODS);
+  // const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
-  const [ latitude, setLatitude ] = useState(0);
-  const [ longitude, setLongitude ] = useState(0);
+  const [ getFilteredFood, { loading, error, data } ] = useMutation(SEND_DISTANCE);
+
+  const [ latitude, setLatitude ] = useState(-8.7118475);
+  const [ longitude, setLongitude ] = useState(115.2035959);
   const [ nearby, setNearby ] = useState([]);
   const [ errorMsg, setErrorMsg ] = useState(null);
 
@@ -78,6 +101,28 @@ function HomeScreen(props) {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (latitude && longitude) {
+      console.log("masuk pak eko")
+      const latLong = {
+        latitude,
+        longitude
+      }
+      console.log(latLong, "<<<<< ini buat di send")
+      getFilteredFood({
+        variables: {
+          latLong
+        }
+      })
+        .then(({ data }) => {
+          // console.log(data, "<<<<<< ini datanya")
+        })
+        .catch((err) => {
+          console.log(err, "<<<< error getFiltered");
+        })
+    }
+  }, [latitude, longitude])
 
   // let text = "Waiting..";
   // if (errorMsg) {
@@ -124,8 +169,10 @@ function HomeScreen(props) {
         <Text style={styles.headerText}>Our Best Deals</Text>
         <Text style={styles.headerText}>Around You</Text>
       </View>
+      {
+        data && 
         <FlatList
-          data={data.getFoods}
+          data={data.sendDistances}
           renderItem={({ item }) => {
             return (
               <View style={styles.containerItem}>
@@ -164,6 +211,7 @@ function HomeScreen(props) {
           }}
           keyExtractor={(item) => item.id}
         />
+      }
     </View>
   );
 }

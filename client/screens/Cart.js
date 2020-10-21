@@ -16,6 +16,8 @@ import PayModal from "../components/PayModal"
 import { Dropdown } from 'react-native-material-dropdown-v2';
 import TrxModal from "../components/TrxModal"
 
+import { userToken, GET_USER_TOKEN } from "../configs/apollo";
+
 
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get("window").width
@@ -48,7 +50,7 @@ export const GET_ALL_CARTS = gql`
   }
 `
 
-const GET_ALL_TRANSACTION = gql`
+export const GET_ALL_TRANSACTION = gql`
 query getAllTransactions{
   getAllTransactions{
     transactionId
@@ -73,7 +75,7 @@ function Cart(props) {
   const { data, loading, error } = useQuery(GET_ALL_CARTS, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
+        access_token: userToken()
       }
     }
   }
@@ -81,21 +83,21 @@ function Cart(props) {
   const { data: dataTrx, loading: loadingTrx, error: errorTrx } = useQuery(GET_ALL_TRANSACTION, {
     context: {
       headers: {
-        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva293aSIsImVtYWlsIjoiam9rb3dpODhAbWFpbC5jb20iLCJpZCI6MSwicm9sZSI6InBldGFuaSIsImlhdCI6MTYwMzIxMTA2M30.lJz_K-DpnN5MuLGS5mWpQMSE3fsclR9G0ghiNDIFXNo"
+        access_token: userToken()
       }
     }
   })
 
-  // useEffect(() => {
-  //   if (loading === true && data) {
-  //     let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
-  //     countedCarts.forEach(cart => {
-  //       console.log(cart.Food.price, cart.quantity, "<<< price")
-  //       setTotalPrice(+totalPrice + (+cart.Food.price * +cart.quantity))
-  //       console.log(totalPrice);
-  //     })
-  //   }
-  // }, [loading])
+  useEffect(() => {
+    if (data) {
+      let countedCarts = data.getAllCarts.filter(cart => cart.status === "Waiting for Checkout")
+      countedCarts.forEach(cart => {
+        console.log(cart.Food.price, cart.quantity, "<<< price")
+        setTotalPrice(+totalPrice + (+cart.Food.price * +cart.quantity))
+        console.log(totalPrice, "<<<<< hasilnya");
+      })
+    }
+  }, [])
 
   let cartStatusOption = [
     { value: "Waiting for Checkout" },
@@ -292,11 +294,14 @@ function Cart(props) {
           setIsPress={() => setIsPress(false)}
           checkoutCarts={data.getAllCarts.filter(cart => cart.status === cartStatus)}
         />
-        <TrxModal
-          isTrxPress={isTrxPress}
-          setIsTrxPress = {() => setIsTrxPress(false)}
-          midtransTrxId={midtransTrxId}
-        />
+        {
+          midtransTrxId && 
+          <TrxModal
+            isTrxPress={isTrxPress}
+            setIsTrxPress = {() => setIsTrxPress(false)}
+            midtransTrxId={midtransTrxId}
+          />
+        }
       </View>
     </View >
   );
