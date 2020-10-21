@@ -10,7 +10,8 @@
     "migration": "sequelize db:create && sequelize db:migrate",
     "database-drop": "sequelize db:drop",
     "migration-test": "sequelize db:create --env test && sequelize db:migrate --env test",
-    "database-drop-test": "sequelize db:drop --env test"
+    "database-drop-test": "sequelize db:drop --env test",
+    "seeding": "sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
