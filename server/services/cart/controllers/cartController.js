@@ -377,7 +377,7 @@ class CartController {
     */
 
 
-    // console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
+    console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
     // console.log(res, "<<<<<<<<<<<<<<<<<<<ini response")
     let mockNotificationJson = {
       // 'currency': 'IDR',
@@ -393,7 +393,7 @@ class CartController {
       // 'va_numbers': [{ 'bank': 'bca', 'va_number': '490526303019299' }]
     }
     // {'transaction_id': req.params.midtransTrxId}
-    core.transaction.notification(mockNotificationJson)
+    core.transaction.notification(JSON.stringify(req.body))
       .then((statusResponse) => {
         console.log(statusResponse, "<<<<<<<<< ini status response dari Midtrans Notification")
         let promises = []

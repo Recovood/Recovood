@@ -300,7 +300,7 @@ function Cart(props) {
       <View style={{ width: "100%", alignItems: "center", }}>
 
         <PayModal
-          isPress={isPress}
+          isPress={isPress && cartStatus === "Waiting for Checkout"}
           setIsPress={() => setIsPress(false)}
           checkoutCarts={data.getAllCarts.filter(cart => cart.status === cartStatus)}
           setTotalPrice={setTotalPrice}

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from "react-native";
+import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { gql, useMutation } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 
+import RcvdLogo from "../assets/rcvd_logo.png"
 import Background from '../assets/background.png'
 import Button from '../components/Button'
 import { userToken, getUsername, getEmail } from "../configs/apollo";
@@ -73,7 +74,7 @@ export default function Login(props) {
       <SafeAreaView style={styles.container}>
         <ImageBackground source={Background} style={styles.image}> 
         <View>
-          <Text style={styles.title}>RECOVOOD</Text>
+          <Image source={RcvdLogo} style={styles.title}/>
         </View>
         <View style={{ marginHorizontal: 20 }}>
           <TextInput value={email} style={styles.textInput} placeholder="Email" onChangeText={inputEmail}/>
@@ -124,10 +125,9 @@ const styles = StyleSheet.create( {
     paddingHorizontal: 7
   },
   title:{
-    fontSize: 50,
-    color: "#FFF",
-    textAlign: "center",
-    fontWeight: "bold"
+      marginTop: 20,
+      width: "100%",
+      height: 74,
   },
   footer:{
     textAlign: "center",
