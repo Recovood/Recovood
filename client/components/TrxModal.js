@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -36,9 +36,9 @@ const GET_TRX_INFO = gql`
 
 export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
   console.log(midtransTrxId, "<<<<< midrant")
-  const { data, loading, error } = useQuery(GET_TRX_INFO, {
+  const { data, loading, error, refetch: getTrxInfo } = useQuery(GET_TRX_INFO, {
     variables: {
-      midtransTrxId: "1f78975e-664c-4e7d-bfcd-981b4081552f"
+      midtransTrxId: midtransTrxId
     },
     context: {
       headers: {
@@ -49,12 +49,16 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
   });
 
   console.log(loading, error, data, "<<<< ini loading error data");
+  
+  useEffect(()=> {
+    getTrxInfo()
+  }, [midtransTrxId])
 
-  if (loading) {
-    return (
-      <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
+  //   );
+  // }
 
   console.log(error, "<<<<<<<< ini error");
   return (

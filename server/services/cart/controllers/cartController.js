@@ -307,9 +307,49 @@ class CartController {
     try {
       console.log("test from trx MIdtrans")
       const transaction_id = req.params.midtransTrxId
+      const promises = []
       core.transaction.status(transaction_id)
         .then((response) => {
+          let orderId = response.order_id;
+          let transactionStatus = response.transaction_status;
+          let fraudStatus = response.fraud_status;
           console.log(response, "<<<<<<< response cart controller");
+          if (transactionStatus == 'capture') {
+            // capture only applies to card transaction, which you need to check for the fraudStatus
+            if (fraudStatus == 'challenge') {
+              // TODO set transaction status on your databaase to 'challenge'
+            } else if (fraudStatus == 'accept') {
+              // TODO set transaction status on your databaase to 'success'
+            }
+          } else if (transactionStatus == 'settlement') {
+            Transaction.findOne({where: { orderId: orderId}, include: [Cart]})
+              .then((data)=> {
+                if(data){
+                  console.log(data.id);
+                  Transaction.update({transactionStatus: "Settlement"}, {where: {id:data.id}}) 
+                    .then(()=>{
+                      Cart.update({status: "Paid"},{where: {TransactionId: data.id}}) 
+                    })
+                }
+              })
+          } else if (transactionStatus == 'deny') {
+            // TODO you can ignore 'deny', because most of the time it allows payment retries
+            // and later can become success
+          } else if (transactionStatus == 'cancel' ||
+            transactionStatus == 'expire') {
+            // TODO set transaction status on your databaase to 'failure'
+            Transaction.findAll({where: { orderId: orderId} })
+            .then((data)=> {
+              if(data){
+                Transaction.destroy({where: {id:data.id}}) 
+              }
+            })
+          } else if (transactionStatus == 'pending') {
+            // TODO set transaction status on your databaase to 'pending' / waiting payment
+          }
+          return response
+        })
+        .then((response)=> {
           res.status(200).json({
             statusMessage: response.status_message,
             transactionId: response.transaction_id,
@@ -320,7 +360,6 @@ class CartController {
             vaNumber: response.va_numbers[0].va_number,
             bank: response.va_numbers[0].bank
           })
-
         })
 
     } catch (error) {
@@ -329,6 +368,7 @@ class CartController {
   }
 
   static async midtransTransaction(req, res, next) {
+    res.status(200).json({message: "gaskeun"})
     //FLOW: 
     /*
       1. Midtrans post data to /cart service 
@@ -337,7 +377,7 @@ class CartController {
     */
 
 
-    console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
+    // console.log(req.body, "<<<<<<<<<<<<<<<<ini request")
     // console.log(res, "<<<<<<<<<<<<<<<<<<<ini response")
     let mockNotificationJson = {
       // 'currency': 'IDR',
@@ -355,7 +395,8 @@ class CartController {
     // {'transaction_id': req.params.midtransTrxId}
     core.transaction.notification(mockNotificationJson)
       .then((statusResponse) => {
-        console.log(statusResponse, "<<<<<<<<< ini status response")
+        console.log(statusResponse, "<<<<<<<<< ini status response dari Midtrans Notification")
+        let promises = []
         let orderId = statusResponse.order_id;
         let transactionStatus = statusResponse.transaction_status;
         let fraudStatus = statusResponse.fraud_status;
@@ -372,18 +413,41 @@ class CartController {
           }
         } else if (transactionStatus == 'settlement') {
           // TODO set transaction status on your databaase to 'success'
-          console.log("test")
+          Transaction.findOne({where: { orderId: orderId}, include: [Cart]})
+          .then((data)=> {
+            if(data){
+              Transaction.update({transactionStatus: "Settlement"}, {where: {id:data.id}}) 
+                .then(()=>{
+                  Cart.update({status: "Paid"},{where: {TransactionId: data.id}}) 
+                })
+            }
+          })
         } else if (transactionStatus == 'deny') {
           // TODO you can ignore 'deny', because most of the time it allows payment retries
           // and later can become success
         } else if (transactionStatus == 'cancel' ||
           transactionStatus == 'expire') {
           // TODO set transaction status on your databaase to 'failure'
+          Transaction.findOne({where: { orderId: orderId} })
+          .then((data)=> {
+            console.log(data, "")
+            if(data){
+              Transaction.destroy({where: {id:data.id}}) 
+            }
+          })
         } else if (transactionStatus == 'pending') {
           // TODO set transaction status on your databaase to 'pending' / waiting payment
           
         }
+        Promise.all(promises)
+          .then(()=> {
+            // res.status(200)
+          })
+          .catch((err)=> {
+            console.log(err);
+          })
       });
+      
   }
 }
 

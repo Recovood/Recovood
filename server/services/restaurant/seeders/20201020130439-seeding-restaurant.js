@@ -15,7 +15,7 @@ module.exports = {
       // DENPASAR
       {
         name: "Fukudako Japanese Restaurant",
-        address: "Jalan Kepaon Indah swung No.2X, Pemogan, Denpasar Selatan, Pemogan, Kec. Denpasar Sel., Kota Denpasar, Bali 80221",
+        address: "Jalan Kepaon Indah No.2X, Denpasar Selatan, Bali 80221",
         image_url: "https://lh5.googleusercontent.com/p/AF1QipM-Xni2o9-5ymEOWfMGFPnael-GraP7Ou5CKOvO=w408-h306-k-no",
         longitude: -8.709444,
         latitude: 115.199977,
@@ -25,7 +25,7 @@ module.exports = {
       },
       {
         name: "Warung Tabia Bali",
-        address: "Jl. Mekar I No.41 Kepaon selatan, Pemogan, Denpasar Selatan, Denpasar City, Bali 80221",
+        address: "Jl. Mekar I No.41 Kepaon Selatan, Denpasar Selatan, Bali 80221",
         image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQwSwvIuJRTV5r4N_Xe0XDO5ke4WwVedPYprA&usqp=CAU",
         longitude: -8.709611,
         latitude: 115.203616,
@@ -35,7 +35,7 @@ module.exports = {
       },
       {
         name: "Nandiya Bakery",
-        address: "Jl. Tukad Baru Timur, Pemogan, Kec. Denpasar Sel., Kota Denpasar, Bali 80221",
+        address: "Jl. Tukad Baru Timur, Denpasar Selatan, Bali 80221",
         image_url: "https://media-cdn.tripadvisor.com/media/photo-s/1a/80/ee/00/conato-bakery.jpg",
         longitude: -8.692270,
         latitude: 115.197484,
@@ -45,7 +45,7 @@ module.exports = {
       },
       {
         name: "Gabah Indonesian Cuisine",
-        address: "Jalan Bakung Sari, Kuta, Kabupaten Badung, Bali 80361",
+        address: "Jl. Bakung Sari, Kuta, Kabupaten Badung, Bali 80361",
         image_url: "https://m.justgola.com/media/a/00/11/71548_lg_1.jpeg",
         longitude: -8.723862,
         latitude: 115.171552,
@@ -55,7 +55,7 @@ module.exports = {
       },
       {
         name: "Ristorante Il Tempio Bali",
-        address: "Jalan Dewi Sartika, Tuban, Kuta, Kabupaten Badung, Bali 80361",
+        address: "Jl. Dewi Sartika, Tuban, Kuta, Kabupaten Badung, Bali 80361",
         image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRK0gy70M2qJhdARWpFIeSX9o66-HpfAdggag&usqp=CAU",
         longitude: -8.727120,
         latitude: 115.169696,
@@ -117,7 +117,7 @@ module.exports = {
       // SERPONG
       {
         name: "Laksa khas Serpong",
-        address: "Jl. Rawa Buntu Selatan No.7, RT.1/RW.1, Rw. Buntu, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
+        address: "Jl. Rawa Buntu Selatan No.7, Serpong, Banten 15310",
         image_url: "https://sumbarfokus.com/foto_berita/87laksa-betawi_yang_menggugah_selera.jpg",
         longitude: -6.279893,
         latitude: 106.839151,
@@ -127,7 +127,7 @@ module.exports = {
       },
       {
         name: "Sari Boboko Sundanese Seafood & Manadonese Food",
-        address: "BSD City, Jl. Ciater Bar. No.54, Ciater, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
+        address: "BSD City, Jl. Ciater Bar. No.54, Banten 15310",
         image_url: "https://img.qraved.co/v2/image/data/2015/08/19/de_leuit-590x590-x.jpg",
         longitude: -6.314280,
         latitude: 106.703670,
@@ -168,7 +168,7 @@ module.exports = {
       //CILANDAK
       {
         name: "Rumanami Residence",
-        address: "Jl. Benda Jl. H. Sainin No.39, RT.5/RW.4, Kemang, Cilandak Tim., Kec. Ps. Minggu, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12560",
+        address: "Jl. H. Sainin No.39, Kemang, Kec. Ps. Minggu, Jakarta Selatan 12560",
         image_url: "https://assets-pergikuliner.com/9pVuLAzrH-cjRJcHSGLUhGiKZ1c=/385x290/smart/https://assets-pergikuliner.com/uploads/image/picture/1975441/picture-1595501431.jpg",
         longitude: -6.275045,
         latitude: 106.816801,
@@ -178,7 +178,7 @@ module.exports = {
       },
       {
         name: "otw sushi jakarta Cilandak",
-        address: "Jl. Caringin Utara No.38, RT.15/RW.10, West Cilandak, Cilandak, South Jakarta City, Jakarta 12430",
+        address: "Jl. Caringin Utara No.38, Cilandak Barat, Jakarta Selatan 12430",
         image_url: "https://ik.imagekit.io/tvlk/cul-asset/guys1L+Yyer9kzI3sp-pb0CG1j2bhflZGFUZOoIf1YOBAm37kEUOKR41ieUZm7ZJ/tvlk-prod-cul-assets/culinary/asset/REST_752-720x720-FIT_AND_TRIM-c07b73f2028603b5b3bf17c9594655a5.jpeg?tr=q-40,c-at_max,w-1080,h-1920&_src=imagekit",
         longitude: -6.283037,
         latitude: 106.792655,
@@ -188,7 +188,7 @@ module.exports = {
       },
       {
         name: "Fish & Co",
-        address: "Jl. RS. Fatmawati Raya No.140-142, RT.6/RW.9, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430",
+        address: "Jl. RS. Fatmawati Raya No.140-142, Cilandak Barat, Jakarta Selatan 12430",
         image_url: "https://assets-pergikuliner.com/_bkfFBLhg7G6oRwVnOIdcwkgxek=/385x290/smart/https://assets-pergikuliner.com/uploads/image/picture/1488402/picture-1563187403.jpg",
         longitude: -6.291026,
         latitude: 106.795134,
@@ -198,7 +198,7 @@ module.exports = {
       },
       {
         name: "Bebek Tepi Sawah",
-        address: "Cilandak Town Square Ground Floor Unit 073, Jalan T. Bonar Simatupang No.Kav. 17, RT.6/RW.9, Cilandak Bar., Kec. Cilandak, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12430",
+        address: "Cilandak Town Square Ground Floor Unit 073, Cilandak Barat, Jakarta Selatan 12430",
         image_url: "https://assets-pergikuliner.com/9yL3QGGaacAUORPfpLE9pgSfM08=/385x290/smart/https://assets-pergikuliner.com/uploads/image/picture/1211230/picture-1546836385.JPG",
         longitude: -6.291443,
         latitude: 106.799693,
@@ -208,7 +208,7 @@ module.exports = {
       },
       {
         name: "Imbiss Stube",
-        address: "Cilandak Town Square Lt GF Unit C 033 Kav 17, Jl. TB Simatupang, RT.6/RW.9, Cilandak Bar., Kec. Cilandak, DKI Jakarta, Daerah Khusus Ibukota",
+        address: "Cilandak Town Square Lt GF Unit C 033 Kav 17, Cilandak Barat, Jakarta Selatan 12430",
         image_url: "https://node-img.qraved.com/image/data/2015/10/05/imbiss-640x640.jpg",
         longitude: -6.291443,
         latitude: 106.799693,

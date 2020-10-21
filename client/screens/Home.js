@@ -7,7 +7,9 @@ import {
   Image,
   Platform,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  ImageBackground,
+  SafeAreaView
 } from "react-native";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import * as Location from "expo-location";
@@ -73,15 +75,15 @@ const SEND_DISTANCE = gql`
 // }
 
 function HomeScreen(props) {
-  
+
   // const { loading, error, data } = useQuery(GET_ALL_FOODS);
 
-  const [ getFilteredFood, { loading, error, data } ] = useMutation(SEND_DISTANCE);
+  const [getFilteredFood, { loading, error, data }] = useMutation(SEND_DISTANCE);
 
-  const [ latitude, setLatitude ] = useState(-8.7118475);
-  const [ longitude, setLongitude ] = useState(115.2035959);
-  const [ nearby, setNearby ] = useState([]);
-  const [ errorMsg, setErrorMsg ] = useState(null);
+  const [latitude, setLatitude] = useState(-8.7118475);
+  const [longitude, setLongitude] = useState(115.2035959);
+  const [nearby, setNearby] = useState([]);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -140,7 +142,7 @@ function HomeScreen(props) {
   if (loading) {
     return (
       <ActivityIndicator
-        style={{ flex: 1 }} 
+        style={{ flex: 1 }}
         size="large"
         color="#376444"
       />
@@ -162,85 +164,102 @@ function HomeScreen(props) {
   //   }
   //   console.log(getNearby, "<<<<< ini nearbies");
   // }
-  
+
   return (
-    <View style={styles.container}>
-      <View style={Platform.OS === "android" ? styles.header: styles.headerIOS}>
-        <Text style={styles.headerText}>Our Best Deals</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={Platform.OS === "android" ? styles.header : styles.headerIOS}>
         <Text style={styles.headerText}>Around You</Text>
+        <Text style={styles.headerText}>Our Best Deals</Text>
       </View>
       {
-        data && 
+        data &&
         <FlatList
+          showsVerticalScrollIndicator={false}
+          style={{ marginHorizontal: 10 }}
           data={data.sendDistances}
           renderItem={({ item }) => {
             return (
-              <View style={styles.containerItem}>
-                <View style={styles.containerItemWrapper}>
-                  <Image
-                    style={styles.restaurantImg}
-                    source={{
-                      uri: item.Restaurant.image_url
-                    }}
-                  />
-                  <TouchableOpacity style={styles.restaurantInfo} onPress={() => props.navigation.navigate("FoodDetails", item=item)}>
-                    <Text style={{ fontWeight: "bold", fontSize: 18, color: "#404040", textAlign:"justify", marginRight: 45 }}>{item.Restaurant.name}</Text>
-                    <Text style={{ color: "#C6C6D5", fontWeight: "bold", textAlign: "justify", marginRight: 45 }}>{item.Restaurant.address}</Text>
-                  </TouchableOpacity>
+              <TouchableOpacity style={styles.containerItem} onPress={() => props.navigation.navigate("FoodDetails", item=item)}>
+                <ImageBackground
+                  imageStyle={{ resizeMode: "cover", borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+                  style={{ width: "100%", height: 150, flexDirection: "column-reverse", }}
+                  source={{ uri: item.image_url }}
+                >
+                  <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
+                    <Image
+                      style={{ width: 50, height: 50, borderRadius: 25 }}
+                      source={{
+                        uri: item.Restaurant.image_url
+                      }}
+                    />
+                    {/* <Text style={{
+                      color: "white",
+                      textShadowRadius: 4,
+                      textShadowColor: "black",
+                      fontWeight: "800",
+                      fontSize: 20,
+                      alignSelf: "center",
+                      paddingHorizontal: 15
+                    }}>{item.name}</Text> */}
+                  </View>
+
+                </ImageBackground>
+                <View style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20, paddingHorizontal: 10, flexDirection: "column", backgroundColor: "white", width: "100%", height: 60 }}>
+                  <Text style={{ fontSize: 20, fontWeight: "700", color: "404040" }}>{item.Restaurant.name}</Text>
+                  <Text style={{ fontWeight: "200", fontSize: 12 }}>{item.Restaurant.address}</Text>
                 </View>
-                <View>
-                  <Image 
-                    style={{
-                      width: "100%",
-                      height: 250,
-                      marginVertical: 20
-                    }}
-                    source={{
-                      uri: item.image_url
-                    }}
-                  />
-                  <Text style={{
-                    fontSize: 18,
-                    color: "#BBBBDD",
-                    fontWeight: "bold",
-                    textAlign: "justify"
-                  }}>{item.ingredient}</Text>
-                </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => item.id}
         />
       }
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // marginHorizontal: 10
+    // backgroundColor: "white"
   },
   header: {
     height: 100,
     backgroundColor: "#7A8D82",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "column-reverse",
+    // alignItems: "center",
+    // alignContent: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
+    paddingBottom: 10
+    // marginBottom: 30
+
   },
   headerIOS: {
     height: 160,
     backgroundColor: "#7A8D82",
+    flexDirection: "column",
     justifyContent: "center",
+    alignContent: "center",
     alignItems: "center",
-    paddingTop: 20
+    paddingTop: 20,
+    // marginBottom: 30
+
   },
   headerText: {
-    color: "#fff"
+    // marginTop: 10,
+    alignSelf: "center",
+    color: "#fff",
   },
   containerItem: {
+    // backgroundColor: "red",
     width: "100%",
     flexDirection: "column",
-    marginVertical: 25,
-    paddingHorizontal: 25
+    marginBottom: 30,
+    // marginHorizontal: 10,
+    // paddingHorizontal: 10,
+    borderRadius: 20
   },
   restaurantImg: {
     height: 50,
