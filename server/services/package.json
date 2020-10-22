@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --collectCoverage --detectOpenHandles --forceExit --runInBand --verbose --watchAll",
+    "test": "jest --collectCoverage --detectOpenHandles --forceExit --watchAll",
     "migration": "npm run migration --prefix ./user && npm run migration --prefix ./restaurant && npm run migration --prefix ./food && npm run migration --prefix ./cart",
     "database-drop": "npm run database-drop --prefix ./user",
     "migration-test": "npm run migration-test --prefix ./user && npm run migration-test --prefix ./restaurant && npm run migration-test --prefix ./food && npm run migration-test --prefix ./cart",
@@ -14,6 +14,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "jest": "^26.5.3"
   }
