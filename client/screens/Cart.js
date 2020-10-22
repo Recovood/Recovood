@@ -120,6 +120,7 @@ function Cart(props) {
     { value: "Done" },
   ];
 
+
   function payButtonHandler() {
     setIsPress(true);
   }
@@ -128,9 +129,11 @@ function Cart(props) {
     setCartStatus(text);
   }
 
+  console.log("masuk sini")
+
   const renderItemCarts = ({ item }) => {
     return (
-      <TouchableOpacity style={{ flex: 1 }} 
+      <TouchableOpacity style={{ flex: 1, marginVertical: 20 }} 
         onPress={()=> {
           setPressedCart(item)
           setIsPress(true)
@@ -192,23 +195,31 @@ function Cart(props) {
   const renderItemTrx = ({ item }) => {
     return (
       <TouchableOpacity
-        style={{ justifyContent: "space-between", alignItems: "flex-start" }}
+        style={{ justifyContent: "space-between", alignItems: "flex-start", marginTop: 20 }}
+        onPress={() => {
+          setIsTrxPress(true)
+          setMidtransTrxId(item.transactionId)
+        }
+        }
       >
-        <Image
-          style={{ height: 30, width: 30, backgroundColor: "pink" }}
-          source={require("../assets/home.png")}
-        />
-        <View style={{ flexDirection: "column", padding: 0 }}>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              color: "#404040",
-              backgroundColor: "pink",
-            }}
-          >
-            {item.orderId}
-          </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            style={{ height: 30, width: 30 }}
+            source={require("../assets/home.png")}
+          />
+          <View style={{ flexDirection: "column", marginHorizontal: 10 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                color: "#404040",
+                // backgroundColor: "pink",
+              }}
+            >
+              {item.orderId}
+            </Text>
+          </View>
+        </View>
           <Text
             style={{
               fontWeight: "bold",
@@ -219,7 +230,6 @@ function Cart(props) {
           >
             Rp{item.totalAmount}
           </Text>
-        </View>
         <View style={styles.line}></View>
       </TouchableOpacity>
     );
@@ -277,6 +287,7 @@ function Cart(props) {
        }}></View>
 
       {cartStatus !== "Pending" ? (
+        
         <FlatList
           refreshing={loading}
           onRefresh={() => getCarts()}
@@ -284,6 +295,8 @@ function Cart(props) {
           data={data.getAllCarts.filter((cart) => cart.status === cartStatus)}
           renderItem={renderItemCarts}
           keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           ListFooterComponent={
             cartStatus === "Waiting for Checkout" ? (
               <View style={{ alignItems: "center" }}>
@@ -297,7 +310,7 @@ function Cart(props) {
                     flex: 1,
                   }}
                 >
-                  Total {totalPrice}
+                  Total Rp{totalPrice}
                 </Text>
                 <TouchableOpacity
                   style={{
@@ -329,6 +342,8 @@ function Cart(props) {
           data={dataTrx.getAllTransactions}
           renderItem={renderItemTrx}
           keyExtractor={(item) => item.id}
+          howsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         />
       )}
 
@@ -347,6 +362,7 @@ function Cart(props) {
             isTrxPress={isTrxPress}
             setIsTrxPress={() => setIsTrxPress(false)}
             midtransTrxId={midtransTrxId}
+            setMidtransTrxId={setMidtransTrxId}
           />
         )}
         

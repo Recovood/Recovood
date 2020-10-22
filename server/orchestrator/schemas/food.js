@@ -16,6 +16,18 @@ const typeDefs = gql`
     Restaurant: Restaurant
   }
 
+  type allFoods {
+    id: ID
+    name: String
+    image_url: String
+    price: Int
+    stock: Int
+    ingredient: String
+    RestaurantId: ID
+    Restaurant: Restaurant
+    distance: Float
+  }
+
   input inputDistances {
     latitude: Float
     longitude: Float
@@ -48,7 +60,7 @@ const typeDefs = gql`
 
     deleteFood(id: ID): Food
 
-    sendDistances(latLong: inputDistances): [Food] 
+    sendDistances(latLong: inputDistances): [allFoods] 
   }
 `;
 
@@ -137,15 +149,18 @@ const resolvers = {
         const { data } = await axios.get(url);
         // console.log(data);
         console.log(args, "<<<<< args in sendDistances");
-        const restaurantNearbies = []
+        // const restaurantNearbies = []
         for (let i = 0; i < data.length; i++) {
           let distance = getDistanceFromLatLonInKm(args.latLong.latitude, args.latLong.longitude, data[i].Restaurant.latitude, data[i].Restaurant.longitude);
           // DISINI BISA GANTI JARAK
-          if (distance < 5) {
-            restaurantNearbies.push(data[i]);
-          }
+          // if (distance < 5) {
+          //   restaurantNearbies.push(data[i]);
+          // }
+          data[i].distance = distance;
         }
-        return restaurantNearbies;
+        data.sort((a, b) => a.distance - b.distance);
+        return data;
+        // return restaurantNearbies;
       } catch(err) {
         console.log(err, "<<<< error in sendDistances");
       }

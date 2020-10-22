@@ -70,7 +70,7 @@ export default function ConfirmModal({ cart, isPress, setIsPress }) {
         style={styles.modal}
       >
         {cart ? (
-          <View style={{ flex: 1, flexDirection: "column" }}>
+          <View style={{ flex: 1, flexDirection: "column", marginVertical: 50 }}>
             <View style={{  flexDirection: "row", flex: 1, width: "100%", padding: 10, justifyContent: "space-evenly" }}>
               <Image style={{ width: 100, height: 100, borderRadius: 10 }} source={{ uri: cart.Food.image_url }}></Image>
               <View>
@@ -107,7 +107,7 @@ export default function ConfirmModal({ cart, isPress, setIsPress }) {
                       // textShadowOffset: { width: -1, height: 1 },
                       // textShadowRadius: 10,
 
-                      fontSize: 30,
+                      fontSize: 28,
                     }}>{pressed ? "Hold for 2 seconds" : "Press To Get Food"}</Text>
                   )
                 }

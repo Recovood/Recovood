@@ -52,6 +52,7 @@ const SEND_DISTANCE = gql`
         longitude
         latitude
       }
+      distance
     }
   }
 `;
@@ -73,6 +74,8 @@ const SEND_DISTANCE = gql`
 // function deg2rad(deg) {
 //   return deg * (Math.PI/180)
 // }
+
+const yourDistanceInput = 5;
 
 function HomeScreen(props) {
 
@@ -179,11 +182,14 @@ function HomeScreen(props) {
           data={data.sendDistances}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity style={styles.containerItem} onPress={() => props.navigation.navigate("FoodDetails", item=item)}>
+              <TouchableOpacity 
+                style={styles.containerItem} onPress={() => props.navigation.navigate("FoodDetails", item=item)} disabled={parseInt(item.distance) < yourDistanceInput ? false : true}>
+                
                 <ImageBackground
                   imageStyle={{ resizeMode: "cover", borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
-                  style={{ width: "100%", height: 150, flexDirection: "column-reverse", }}
+                  style={{ width: "100%", height: 150, flexDirection: "column-reverse"}}
                   source={{ uri: item.image_url }}
+                  blurRadius={parseInt(item.distance) < yourDistanceInput ? 0 : 2}
                 >
                   <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
                     <Image
@@ -204,9 +210,26 @@ function HomeScreen(props) {
                   </View>
 
                 </ImageBackground>
-                <View style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20, paddingHorizontal: 10, flexDirection: "column", backgroundColor: "white", width: "100%", height: 60 }}>
-                  <Text style={{ fontSize: 20, fontWeight: "700", color: "404040" }}>{item.Restaurant.name}</Text>
+                <View style={{ borderBottomLeftRadius: 20, borderBottomRightRadius: 20, paddingHorizontal: 10, flexDirection: "column", backgroundColor: "white", width: "100%", height: 160 }}>
+                  <Text style={[styles.restaurantName, parseInt(item.distance) < yourDistanceInput ? {} : styles.farAway]}>{item.Restaurant.name}</Text>
                   <Text style={{ fontWeight: "200", fontSize: 12 }}>{item.Restaurant.address}</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 6 }}>
+                    <Image 
+                      style={{ height: 20, width: 20 }}
+                      source={require("../assets/placeholder.png")}
+                    />
+                    { 
+                      parseInt(item.distance) < yourDistanceInput ? (<Text style={{ fontWeight: "700" ,fontSize: 17, marginHorizontal: 5, color: "#8c8c8c" }}>{item.distance.toPrecision(1)} km from you</Text>) : (<Text style={{ fontWeight: "700" ,fontSize: 17, marginHorizontal: 5, color: "#8c8c8c" }}>Item is out of reach</Text>)
+                    }
+                  </View>
+                  <Text style={{ fontSize: 15, marginTop: 7, fontWeight: "700", color: "#8c8c8c", fontStyle: "italic", textDecorationLine: "line-through", padding: 4 }}>Rp{item.price * (Math.floor(Math.random() * (2.5 - 1.5 + 1)) + 1.5)}</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Image 
+                      style={{ height: 30, width: 30, resizeMode: "contain" }}
+                      source={require("../assets/percentage.png")}
+                    />
+                    <Text style={{ fontSize: 20, fontWeight: "700", color: "#404040", marginHorizontal: 5 }}>Rp{item.price}</Text>
+                  </View>
                 </View>
               </TouchableOpacity>
             );
@@ -224,6 +247,9 @@ const styles = StyleSheet.create({
     // marginHorizontal: 10
     // backgroundColor: "white"
   },
+  restaurantName: {
+    fontSize: 20, fontWeight: "700", color: "#404040"
+  },
   header: {
     height: 100,
     backgroundColor: "#7A8D82",
@@ -236,6 +262,9 @@ const styles = StyleSheet.create({
     // marginBottom: 30
 
   },
+  farAway: {
+    textDecorationLine: "line-through"
+  },
   headerIOS: {
     height: 160,
     backgroundColor: "#7A8D82",
@@ -245,7 +274,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 20,
     // marginBottom: 30
-
   },
   headerText: {
     // marginTop: 10,

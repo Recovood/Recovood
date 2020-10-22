@@ -11,6 +11,7 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  Clipboard,
 } from "react-native";
 import Modal from "react-native-modal";
 import React from "react";
@@ -36,7 +37,10 @@ const GET_TRX_INFO = gql`
   }
 `;
 
-export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
+export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress, setMidtransTrxId }) {
+
+  const [ copiedText, setCopiedText ] = useState("");
+
   console.log(midtransTrxId, "<<<<< midrant")
   const { data, loading, error, refetch: getTrxInfo } = useQuery(GET_TRX_INFO, {
     variables: {
@@ -49,6 +53,17 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
       },
     },
   });
+
+  const copyToClipboard = (vaNumber) => {
+    Clipboard.setString(vaNumber);
+  }
+
+  // const fetchCopiedString = async() => {
+  //   if (data) {
+  //     const text = await Clipboard.getString();
+  //     setCopiedText(text);
+  //   }
+  // }
 
   console.log(loading, error, data, "<<<< ini loading error data");
   
@@ -74,20 +89,67 @@ export default function TrxModal({ midtransTrxId, isTrxPress, setIsTrxPress }) {
         swipeDirection="down"
         onSwipeComplete={() => {
           setIsTrxPress(false);
+          setMidtransTrxId();
         }}
         onBackdropPress={() => {
           setIsTrxPress(false);
+          setMidtransTrxId();
         }}
         style={styles.modal}
       >
         {loading ? (
           <ActivityIndicator style={{ flex: 1 }} size="large" color="#376444" />
         ) : (
-          <View>
-            <Text>Complete your Transaction</Text>
-            <Text>VA Number {data.getMidtransTransaction.vaNumber}</Text>
-            <Text>Payment Type {data.getMidtransTransaction.paymentType}</Text>
-            <Text>Bank {data.getMidtransTransaction.bank}</Text>
+          <View style={{ flex: 1, marginVertical: 70, alignItems: "center" }}>
+            <Text 
+              style={{ 
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "#404040",
+              textAlign: "center",
+              marginBottom: 20}}
+            >
+              Complete your Transaction
+            </Text>
+            <View style={{ alignItems: "center" }}>
+              {
+                data.getMidtransTransaction.bank === "bca" && 
+                <Image 
+                  style={{ height: 90, width: 90, resizeMode:"contain" }}
+                  source={require("../assets/bca.png")}
+                />
+              }
+              {
+                data.getMidtransTransaction.bank === "bri" && 
+                <Image 
+                  style={{ height: 60, width: 60, resizeMode:"contain" }}
+                  source={require("../assets/bri.png")}
+                />
+              }
+            </View>
+            <Text 
+              style={{ 
+              fontWeight: "bold",
+              fontSize: 16,
+              color: "#8c8c8c",
+              textAlign: "center"}}
+            >
+              VA Number
+            </Text>
+            <TouchableOpacity
+              onPress={() => copyToClipboard(data.getMidtransTransaction.vaNumber)}
+            >
+              <Text 
+                style={{ 
+                fontWeight: "bold",
+                fontSize: 16,
+                color: "#404040",
+                textAlign: "center"}}
+                selectable
+              >
+                {data.getMidtransTransaction.vaNumber}
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </Modal>

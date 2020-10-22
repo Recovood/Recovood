@@ -37,7 +37,7 @@ const PAYMENT_BANK = gql`
   }
 `; // BRI BCA BNI
 
-export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalPrice}) {
+export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalPrice, navigation}) {
   const [isBankClick, setIsBankClick] = useState(false)
   const [paymentBank, { loading: LoadingPayment }] = useMutation(PAYMENT_BANK, {  //BCA BNI BRI
     context: {
@@ -83,7 +83,7 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
     })
     setIsPress();
     setTotalPrice(0)
-    navigation.navigate("Cart", {menuName:"Pending"});
+    // navigation.navigate("Cart", {menuName:"Pending"});
   }
   if (LoadingPayment) {
     return (
@@ -113,9 +113,18 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
         onBackdropPress={() => { setIsPress() }}
         style={styles.modal}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView 
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={styles.container}>
           <View style={styles.paymentOptionContainer}>
-            <Text style={styles.paymentOptionText}>Credit/Debit Card</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Image 
+                style={{ height: 35, width: 35, resizeMode: "contain", alignItems: "center" }}
+                source={require("../assets/credit-card.png")}
+              />
+              <Text style={styles.paymentOptionText}>Credit/Debit Card</Text>
+            </View>
             <Image source={require("../assets/arrow.png")} style={{ transform: [{ rotateY: '180deg' }] }} />
           </View>
 
@@ -126,7 +135,13 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
             onPress={() => { isBankClick ? setIsBankClick(false) : setIsBankClick(true) }}
           >
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-              <Text style={styles.paymentOptionText}>Bank Account</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Image 
+                  style={{ height: 35, width: 35, resizeMode: "contain", alignItems: "center" }}
+                  source={require("../assets/bank.png")}
+                />
+                <Text style={styles.paymentOptionText}>Bank Account</Text>
+              </View>
               <Image
                 source={require("../assets/arrow.png")}
                 style={isBankClick ? { transform: [{ rotateX: '0deg' }] } : { transform: [{ rotateY: '180deg' }] }}
@@ -138,13 +153,41 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
               <View
                 style={styles.bankOptionContainer}
               >
-                <TouchableOpacity onPress={() => { bankPayButton("bri") }}><Text style={styles.bankOption}>BRI (Virtual Account)</Text></TouchableOpacity>
+                <TouchableOpacity 
+                  style={{ flexDirection: "row" }}
+                  onPress={() => { bankPayButton("bri") }}>
+                  <Image 
+                    style={{ height: 40, width: 40, resizeMode:"contain" }}
+                    source={require("../assets/bri.png")}
+                  />
+                  <Text style={styles.bankOption}>
+                    BRI (Virtual Account)
+                  </Text>
+                </TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity onPress={() => { bankPayButton("bca") }}><Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => { bankPayButton("bca") }}>
+                <Image 
+                    style={{ height: 40, width: 40, resizeMode:"contain" }}
+                    source={require("../assets/bca.png")}
+                  />
+                  <Text style={styles.bankOption}>BCA (Virtual Account)</Text></TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity onPress={() => { bankPayButton("permata") }}><Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => { bankPayButton("permata") }}>
+                <Image 
+                    style={{ height: 40, width: 40, resizeMode:"contain" }}
+                    source={require("../assets/permata.png")}
+                  />
+                  <Text style={styles.bankOption}>Permata (Virtual Account)</Text></TouchableOpacity>
                 <View style={styles.line} />
-                <TouchableOpacity ><Text style={styles.bankOption}>Other Banks</Text></TouchableOpacity>
+                <TouchableOpacity >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>    
+                  <Image 
+                    style={{ height: 30, width: 30, resizeMode: "contain", alignItems: "center", marginHorizontal: 5 }}
+                    source={require("../assets/bank.png")}
+                  />
+                    <Text style={styles.bankOption}>Other Banks</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
               :
               null
@@ -152,7 +195,13 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
           <View style={styles.line} />
 
           <View style={styles.paymentOptionContainer}>
-            <Text style={styles.paymentOptionText}>Go Pay</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image 
+                style={{ height: 40, width: 40, resizeMode: "contain" }}
+                source={require("../assets/GoPay.png")}
+              />
+              <Text style={styles.paymentOptionText}>Go Pay</Text>
+            </View>
             <Image source={require("../assets/arrow.png")} style={{ transform: [{ rotateY: '180deg' }] }} />
           </View>
         </ScrollView>
@@ -185,14 +234,17 @@ const styles = StyleSheet.create({
     padding: 10
   },
   paymentOptionText: {
-    fontSize: 20
+    fontSize: 20,
+    marginHorizontal: 10
   },
   bankOptionContainer: {
-    paddingLeft: 30
+    paddingLeft: 30,
+    marginVertical: 10
   },
   bankOption: {
     fontSize: 18,
-    padding: 5
+    padding: 5,
+    marginVertical: 5
   },
   container: {
     display: "flex",
