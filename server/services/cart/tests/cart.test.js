@@ -10,20 +10,29 @@ const midtransClient = require("midtrans-client");
 jest.mock('midtrans-client', () => {
   return {
     CoreApi: jest.fn().mockImplementation(() => {
+      // const transaction = {
+      //   status: ()
+      // }
       return {
+        transaction,
         charge: jest.fn().mockResolvedValue({
           transaction_id: "trxIdTeSTinG",
           order_id: "RCVDTEST",
           gross_amount: "10000",
           payment_type: "bank_transfer",
           transaction_status: "pending",
-        }),
-        transaction: jest.fn().mockImplementation({
-          status: jest.fn().mockResolvedValue({
-            order_id: "RCVDTEST",
-            transaction_status: "settlement"
-          })
         })
+        // transaction: jest.fn().mockImplementation(() => {
+        //   return {
+        //     status: jest.fn().mockImplementation(() => {
+        //       return {
+        //         
+        //       }
+
+        //     })
+        //   }
+
+
       }
     })
   }
@@ -397,7 +406,7 @@ describe("MODEL Cart", () => {
           done()
         })
     })
-  
+
     test("Success get Transactions(s) from database", (done) => {
       request(app)
         .get(`/transactions`)
@@ -411,18 +420,18 @@ describe("MODEL Cart", () => {
           expect(status).toBe(200);
           expect(body).toHaveProperty("transactions");
           done();
-          return transaction= body.transactions[0]
+          return transaction = body.transactions[0]
 
         })
     })
-  
+
     test("Success get Transaction from Midtrans", (done) => {
       console.log(transaction)
       request(app)
         .get(`/midtrans/${transaction.id}`)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
-        .then((res)=> {
+        .then((res) => {
           const { body, status } = res
           console.log(body, "ini body trx from midtrans")
           expect(status).toBe(500)

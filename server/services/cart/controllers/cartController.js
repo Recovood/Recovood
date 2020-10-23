@@ -368,7 +368,9 @@ class CartController {
       console.log("test from trx MIdtrans");
       const transaction_id = req.params.midtransTrxId;
       const promises = [];
-      console.log(core.transaction);
+      console.log(core.transaction.status)
+      console.log(core.transaction, "trx doang")
+      // console.log(core)
       core.transaction
         .status(transaction_id)
         .then((response) => {

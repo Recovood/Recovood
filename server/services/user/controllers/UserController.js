@@ -54,7 +54,7 @@ class UserController {
     } catch (err) {
       console.log(err.name, "<<<< error in register UserController");
 
-      return next(err);
+      next(err);
     }
   }
 

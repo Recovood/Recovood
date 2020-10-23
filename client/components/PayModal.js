@@ -83,7 +83,7 @@ export default function PayModal({ isPress, setIsPress, checkoutCarts, setTotalP
     })
     setIsPress();
     setTotalPrice(0)
-    navigation.navigate("Cart", {menuName:"Pending"});
+    // navigation.navigate("Cart", {menuName:"Pending"});
   }
   if (LoadingPayment) {
     return (
