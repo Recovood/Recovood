@@ -4,6 +4,13 @@ const errHandler = (err, req, res, next) => {
   let errors = [];
 
   switch (err.name) {
+    case "SequelizeValidationError":
+    case "SequelizeConstraintError":
+        err.errors.forEach((error) => {
+          errors.push(error.message);
+        });
+        statusCode = 400;
+        break;
     case "SequelizeUniqueConstraintError":
       errors.push("Email has already been registered!");
       statusCode = 400;
