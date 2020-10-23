@@ -1,7 +1,7 @@
 # Recovood
 Get your healthy food with a discounted price here.
-![poster1](https://user-images.githubusercontent.com/67887501/97043274-66e07680-159c-11eb-83f2-f2dfb182682a.png)
-![poster2](https://user-images.githubusercontent.com/67887501/97043279-68aa3a00-159c-11eb-9c2b-3d41b1d65387.png)
+<img src="./documentation/1.png" width="180" height="auto">
+<img src="./documentation/2.png" width="180" height="auto">
 ### N.B.
 - All cd are relative to this following pwd
   ```
