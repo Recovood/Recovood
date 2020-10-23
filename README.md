@@ -1,7 +1,7 @@
 # Recovood
 Get your healthy food with a discounted price here.
-<img src="./documentation/1.png" width="180" height="auto">
-<img src="./documentation/2.png" width="180" height="auto">
+<img src="./documentation/1.png" width="720" height="auto">
+<img src="./documentation/2.png" width="720" height="auto">
 ### N.B.
 - All cd are relative to this following pwd
   ```
