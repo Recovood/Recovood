@@ -24,6 +24,8 @@ const ADD_CART = gql`
 
 export default function PopupDetail({ isPress, setFalse= () => {}, address, price, navigation, item }) {
   
+  console.log(navigation, "<<<< ini navigationnya sayang");
+
   const [ quantity, setQuantity ] = useState(1);
 
   const [ addToCart, { data } ] = useMutation(ADD_CART, {

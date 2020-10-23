@@ -54,12 +54,15 @@ export default function Login(props) {
       SecureStore.setItemAsync("access_token", data.login.access_token);
       SecureStore.setItemAsync("username", data.login.username);
       SecureStore.setItemAsync("email", data.login.email);
-
+      
+      console.log("<<<<<< kena");
       userToken(data.login.access_token);
       getUsername(data.login.username);
       getEmail(data.login.email);
+      console.log(userToken(), "<<<<<<< apa ini");
+      console.log()
     } catch(err) {
-      console.log(err);
+      console.log(err, "<<<<<< kena ini ya");
     }
   }
 
@@ -83,9 +86,15 @@ export default function Login(props) {
             <TouchableOpacity activeOpacity={0.8} style={styles.touachableButton} onPress={setPasswordVisibility}>
               {
                 visibility ? (
-                  <Text>Show</Text> 
+                  <Image 
+                    style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    source={require("../assets/visibility-show.png")}
+                  />
                 ): (
-                  <Text>Hide</Text> 
+                  <Image 
+                    style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    source={require("../assets/visibility-hide.png")}
+                  />
                 )
               }
             </TouchableOpacity>
@@ -113,7 +122,7 @@ const styles = StyleSheet.create( {
     resizeMode: "cover",
     justifyContent: "space-around",
     display: "flex",
-    paddingVertical: 32,
+    paddingVertical: 42,
     paddingHorizontal: 16
   },
   textInput:{
@@ -127,7 +136,7 @@ const styles = StyleSheet.create( {
   title:{
       marginTop: 20,
       width: "100%",
-      height: 74,
+      height: 100,
   },
   footer:{
     textAlign: "center",
@@ -138,7 +147,7 @@ const styles = StyleSheet.create( {
   },
   touachableButton: {
     position: 'absolute',
-    right: 20,
+    right: 3,
     height: 25,
     width: 40,
     padding: 2,

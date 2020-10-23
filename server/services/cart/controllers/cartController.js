@@ -2,8 +2,8 @@ const { Cart, sequelize, Food, Restaurant, Transaction } = require("../models");
 const midtransClient = require("midtrans-client");
 let core = new midtransClient.CoreApi({
   isProduction: false,
-  serverKey: "SB-Mid-server-1zuSI64YfBbKXCqz5_MzKCXV",
-  clientKey: "SB-Mid-client-jGQVtFgiEUj_raF5",
+  serverKey: "SB-Mid-server-g5GA_rsN8bxEb4w0G9nHtxdr",
+  clientKey: "SB-Mid-client-vvlMzZk-BMwtrVyE",
 });
 
 class CartController {
@@ -432,8 +432,8 @@ class CartController {
             totalPrice: response.gross_amount,
             paymentType: response.payment_type,
             transactionStatus: response.transaction_status,
-            // vaNumber: response.va_numbers[0].va_number || response.permata_va_number,
-            // bank: response.va_numbers[0].bank || null,
+            vaNumber: response.va_numbers[0].va_number || response.permata_va_number,
+            bank: response.va_numbers[0].bank || null,
           });
         });
     } catch (error) {
