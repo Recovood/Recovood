@@ -1,6 +1,6 @@
 const { gql, UserInputError, AuthenticationError } = require("apollo-server");
 const { default: Axios } = require("axios");
-const urlCart = "https://39ecd257c1f1.ngrok.io"
+const urlCart = "https://69e8ac55df82.ngrok.io"
 
 const typeDefs = gql`
   type Cart{

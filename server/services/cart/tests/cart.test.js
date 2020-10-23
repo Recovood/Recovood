@@ -14,7 +14,7 @@ jest.mock('midtrans-client', () => {
       //   status: ()
       // }
       return {
-        transaction,
+        // transaction,
         charge: jest.fn().mockResolvedValue({
           transaction_id: "trxIdTeSTinG",
           order_id: "RCVDTEST",

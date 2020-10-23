@@ -2,8 +2,8 @@ const { Cart, sequelize, Food, Restaurant, Transaction } = require("../models");
 const midtransClient = require("midtrans-client");
 let core = new midtransClient.CoreApi({
   isProduction: false,
-  serverKey: "SB-Mid-server-g5GA_rsN8bxEb4w0G9nHtxdr",
-  clientKey: "SB-Mid-client-vvlMzZk-BMwtrVyE",
+  serverKey: process.env.MIDTRANS_SERVER_KEY,
+  clientKey: process.env.MIDTRANS_CLIENT_KEY,
 });
 
 class CartController {
