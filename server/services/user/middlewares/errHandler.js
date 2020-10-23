@@ -1,5 +1,5 @@
 const errHandler = (err, req, res, next) => {
-  console.log(err, "<<<< from error handler");
+  // console.log(err, "<<<< from error handler");
   let statusCode = 500;
   let errors = [];
 

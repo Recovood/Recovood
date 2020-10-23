@@ -12,16 +12,20 @@ class CartController {
       const UserId = req.headers.user_id;
       const { FoodId, quantity, status } = req.body;
       // console.log(quantity, ">>>>> quantitynya");
+      console.log(UserId, FoodId, quantity)
 
 
       let cartFromDb = await Cart.findOne({
         where: { UserId, FoodId, status: "Waiting for Checkout" },
         include: [Food],
       }); // Add include: Food | if Food model completed
+      // console.log(cartFromDb, "INI CART FROM DB")
       // console.log(cartFromDb.quantity, ">>>>> cartfromdb");
       if (cartFromDb) {
+        console.log(UserId, FoodId, quantity, "masuk ke if")
+
         let totalQuantity = Number(quantity) + Number(cartFromDb.quantity);
-        console.log(totalQuantity, ">>>>>> totalqty");
+        // console.log(totalQuantity, quantity, cartFromDb.quantity, ">>>>>> totalqty");
 
         if (totalQuantity > cartFromDb.Food.stock) {
           let err = {
@@ -53,7 +57,7 @@ class CartController {
           };
           throw err;
         }
-        console.log(quantity, "safasdf")
+        // console.log(quantity, "safasdf")
         const newCart = await Cart.create({ UserId, FoodId, quantity, status });
         return res.status(201).json({
           id: newCart.id,
@@ -156,6 +160,7 @@ class CartController {
     }
       
   }
+  
   static async midtrans(req, res, next) {
     try {
       console.log(req.body, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
@@ -166,7 +171,6 @@ class CartController {
         totalPrice,
         username,
         email,
-        carts,
         id: UserId,
       } = req.body;
       let parameter = {};
@@ -221,13 +225,16 @@ class CartController {
               statusCode: 400,
               message: "checkout fail",
             };
-            throw new Error(err);
+            throw err
           } else {
+
+            console.log(core.charge(), "ini charge")
             return core.charge(parameter);
           }
         })
         .then((midtransResponse) => {
-          // console.log(midtransResponse.transaction_id);
+          console.log(core.charge.mock.results);
+          console.log(midtransResponse, 'response mockfunction');
           midtransTrxId = midtransResponse.transaction_id;
           return Transaction.create(
             {
@@ -258,14 +265,14 @@ class CartController {
           }
         })
         .then(() => {
-          res.status(200).json({
+          res.status(201).json({
             message: "your transaction succesfully placed, waiting for payment",
           });
         })
         .catch((e) => {
           console.log(e);
           t.rollback();
-          core.transaction.cancel(midtransTrxId);
+          // core.transaction.cancel(midtransTrxId);
           throw e;
         });
     } catch (error) {
@@ -361,6 +368,7 @@ class CartController {
       console.log("test from trx MIdtrans");
       const transaction_id = req.params.midtransTrxId;
       const promises = [];
+      console.log(core.transaction);
       core.transaction
         .status(transaction_id)
         .then((response) => {
@@ -414,6 +422,7 @@ class CartController {
           return response;
         })
         .then((response) => {
+          console.log(response, "ini dari cartController")
           res.status(200).json({
             statusMessage: response.status_message,
             transactionId: response.transaction_id,

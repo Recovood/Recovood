@@ -43,6 +43,7 @@ class UserController {
         password,
         role,
       });
+      console.log(user, "ini user")
       const access_token = generateToken(user);
       return res.status(201).json({
         access_token: access_token,
@@ -51,7 +52,8 @@ class UserController {
         username: user.username,
       });
     } catch (err) {
-      // console.log(err, "<<<< error in register UserController");
+      console.log(err.name, "<<<< error in register UserController");
+
       return next(err);
     }
   }

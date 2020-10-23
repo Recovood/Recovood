@@ -92,7 +92,7 @@ describe("User Endpoints Tests", () => {
         });
     });
 
-    test("400:Empty field, return json with error messages", (done) => {
+    test("400:Empty Field, return json with error messages", (done) => {
       request(app)
         .post("/register")
         .send(emptyUserRegister)
