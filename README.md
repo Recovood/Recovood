@@ -1,5 +1,5 @@
 # Recovood
-Get your healthy food with a discounted price here.  
+A mobile-based app was built to address the food waste issue in Indonesia by providing a platform for foods and beverages merchants to sell their still in-stock food that is still decent to be sold to the customers at discounted prices.Get your healthy food with a discounted price here!
 <img src="./documentation/1.png" width="320"  height="auto">
 <img src="./documentation/2.png" width="320" height="auto">
 ### N.B.
